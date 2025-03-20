@@ -31,7 +31,7 @@ namespace Modules.CharacterController
         public static void UpdateNavmeshMovement(State _state)
         {
             // Skip if not in Navmesh mode
-            if (_state.dynamicData.movementData.navigationMode != NavigationMode.Navmesh)
+            if (_state.dynamicData.movementData.navigationMode != NavigationMode.Navmesh && _state.navAgent.path.status != NavMeshPathStatus.PathInvalid)
             {
                 return;
             }
@@ -67,6 +67,12 @@ namespace Modules.CharacterController
 
             // Apply the smoothed velocity to the NavMeshAgent
             _state.navAgent.velocity = _state.dynamicData.movementData.currentVelocity;
+
+            // Apply rotation
+            Vector3 nextPathPos = _state.navAgent.steeringTarget;
+            Vector3 desiredDir = (nextPathPos - _state.transform.position).normalized;
+
+            _state.dynamicData.rotationData.targetLookDirection = desiredDir;
         }
 
         // *****************************

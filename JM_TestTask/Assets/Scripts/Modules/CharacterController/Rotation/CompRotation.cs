@@ -10,127 +10,130 @@ namespace Modules.CharacterController
         // *****************************
         public static void UpdateRotation(State _state)
         {
-            // Extract target direction and precision
+            bool isRelativeRotation = _state.dynamicData.rotationData.hasRelativeLookAngles;
+            if (isRelativeRotation)
+            {
+                MakeRelativeRotation(_state);
+            }
+            else
+            {
+                MakeLookAtRotation(_state);
+            }
+
+            // Reset rotation data to prevent continuous rotation
+            ResetRotationData(_state);
+        }
+
+        // *****************************
+        // MakeRelateiveRotation
+        // *****************************
+        private static void MakeRelativeRotation(State _state)
+        {
+            Vector2 relativeAngles = _state.dynamicData.rotationData.relativeLookAngles;
+            float floatPrecision = _state.config.P_FloatPrecision;
+
+            // Check if angles are significant
+            if (relativeAngles.sqrMagnitude < floatPrecision)
+            {
+                return;
+            }
+
+            // Apply rotation
+            _state.transform.rotation *= Quaternion.Euler(0f, _state.dynamicData.rotationData.relativeLookAngles.x, 0f);
+            _state.verticalLookTransform.rotation *= Quaternion.Euler(_state.dynamicData.rotationData.relativeLookAngles.y, 0f, 0f);
+
+            // Clamp vertical rotation
+            Vector3 newFwd = _state.verticalLookTransform.forward;
+            float maxAngle = _state.config.P_MaxVerticalLookAngle;
+
+            float angle = Vector3.SignedAngle(newFwd, _state.transform.forward, _state.transform.right);
+            bool needClamp = Mathf.Abs(angle) > maxAngle;
+            if (needClamp)
+            {
+                _state.verticalLookTransform.rotation = _state.transform.rotation * Quaternion.Euler(-Mathf.Sign(angle) * maxAngle, 0f, 0f);
+            }
+        }
+
+        // *****************************
+        // MakeLookAtRotation
+        // *****************************
+        private static void MakeLookAtRotation(State _state)
+        {
+            // Extract target direction
             Vector3 targetDir = _state.dynamicData.rotationData.targetLookDirection;
             float floatPrecision = _state.config.P_FloatPrecision;
 
             // Check if direction is significant
-            bool hasSignificantDirection = targetDir.sqrMagnitude >= floatPrecision;
-            if (!hasSignificantDirection)
+            if (targetDir.sqrMagnitude < floatPrecision)
             {
-                // In Navmesh mode, use the agent's desired velocity as the look direction
-                if (_state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh)
-                {
-                    targetDir = CompNavmesh.GetNavmeshLookDirection(_state);
-                    hasSignificantDirection = targetDir.sqrMagnitude >= floatPrecision;
-                    if (hasSignificantDirection)
-                    {
-                        _state.dynamicData.rotationData.targetLookDirection = targetDir;
-                    }
-                }
-
-                if (!hasSignificantDirection)
-                {
-                    return;
-                }
+                return;
             }
 
-            // Extract vertical angle
-            ExtractVerticalAngle(_state, floatPrecision);
+            // Project targetLookDirection onto the horizontal plane
+            Vector3 targetHorizontalDir = Vector3.ProjectOnPlane(targetDir, _state.transform.up);
+            targetHorizontalDir.Normalize();
 
-            // Apply vertical rotation to child transform
-            ApplyVerticalRotation(_state);
-
-            // Smoothly rotate in the horizontal plane
-            SmoothRotate(_state);
-        }
-
-        // *****************************
-        // ExtractVerticalAngle
-        // *****************************
-        private static void ExtractVerticalAngle(State _state, float _floatPrecision)
-        {
-            // Extract target direction
-            Vector3 targetDir = _state.dynamicData.rotationData.targetLookDirection;
-            Vector3 flatDir   = targetDir;    
-            flatDir.y = 0f;
-
-            float magnitude = flatDir.magnitude;
-
-            // Check if direction is significant
-            if (magnitude > _floatPrecision)
+            // Check if the projected direction is significant
+            if (targetHorizontalDir.sqrMagnitude < floatPrecision)
             {
-                float verticalAngle = Mathf.Asin(targetDir.y / targetDir.magnitude) * Mathf.Rad2Deg;
-                _state.dynamicData.rotationData.verticalLookAngle = verticalAngle;
+                return;
             }
-        }
 
-        // *****************************
-        // ApplyVerticalRotation
-        // *****************************
-        private static void ApplyVerticalRotation(State _state)
-        {
-            // Extract vertical angle
-            float verticalAngle = _state.dynamicData.rotationData.verticalLookAngle;
+            // Update vertical angle based on the target direction
+            Vector3 flatDir = targetDir;
 
-            // Apply rotation around local X axis
-            _state.verticalLookTransform.localRotation = Quaternion.Euler(verticalAngle, 0f, 0f);
+            // Queue smooth rotation if flag is enabled
+            bool useSmoothRotation = _state.config.P_UseSmoothHorizontalRotation;
+            if (useSmoothRotation)
+            {
+                // Calculate the angle difference for smooth rotation
+                Vector3 currentHorizontalDir = _state.transform.forward;
+                currentHorizontalDir.y = 0f;
+                currentHorizontalDir.Normalize();
+                float angleDiff = Vector3.SignedAngle(currentHorizontalDir, targetHorizontalDir, Vector3.up);
+                SmoothRotate(_state, angleDiff);
+            }
+            else
+            {
+                // Apply immediate rotation
+                _state.transform.rotation = Quaternion.LookRotation(targetHorizontalDir);
+                _state.dynamicData.rotationData.rotationAxis.SetTarget(0f);
+            }
         }
 
         // *****************************
         // SmoothRotate
         // *****************************
-        public static void SmoothRotate(State _state)
+        private static void SmoothRotate(State _state, float _angleDiff)
         {
-            // Extract target direction and config values
-            Vector3 targetDir = _state.dynamicData.rotationData.targetLookDirection;
-            targetDir.y = 0f;
-
-            float deltaTime         = Time.deltaTime;
-            float floatPrecision    = _state.config.P_FloatPrecision;
-            float anglePrecision    = _state.config.P_AnglePrecision;
-            bool  useSmoothRotation = _state.config.P_UseSmoothHorizontalRotation;
-
-            // Check if direction is significant
-            bool hasSignificantDirection = targetDir.sqrMagnitude >= floatPrecision;
-            if (!hasSignificantDirection)
-            {
-                _state.dynamicData.rotationData.rotationAxis.SetTarget(0f);
-                return;
-            }
-
-            // Calculate angle difference
-            Vector3 currentDir = _state.transform.forward;
-            currentDir.y = 0f;
-            float angleDiff = Vector3.SignedAngle(currentDir, targetDir, Vector3.up);
+            float anglePrecision = _state.config.P_AnglePrecision;
 
             // Snap to target if angle difference is small
-            bool isAngleSmall = Mathf.Abs(angleDiff) < anglePrecision;
-            if (isAngleSmall)
+            if (Mathf.Abs(_angleDiff) < anglePrecision)
             {
-                _state.transform.rotation = Quaternion.LookRotation(targetDir);
                 _state.dynamicData.rotationData.rotationAxis.SetTarget(0f);
                 return;
             }
 
-            // Handle horizontal rotation based on config
-            if (useSmoothRotation)
-            {
-                // Update rotation axis with target angular speed
-                _state.dynamicData.rotationData.rotationAxis.SetTarget(angleDiff);
+            // Update rotation axis with target angular speed
+            _state.dynamicData.rotationData.rotationAxis.SetTarget(_angleDiff);
 
-                // Update axis to get current angular speed
-                float angularSpeed = _state.dynamicData.rotationData.rotationAxis.UpdateAxis(deltaTime);
+            // Update axis to get current angular speed
+            float deltaTime = Time.deltaTime;
+            float angularSpeed = _state.dynamicData.rotationData.rotationAxis.UpdateAxis(deltaTime);
 
-                // Apply rotation
-                _state.transform.Rotate(Vector3.up, angularSpeed * deltaTime, Space.World);
-            }
-            else
-            {
-                // Apply immediate rotation
-                _state.transform.rotation = Quaternion.LookRotation(targetDir);
-                _state.dynamicData.rotationData.rotationAxis.SetTarget(0f);
-            }
+            // Apply rotation
+            _state.transform.rotation *= Quaternion.Euler(0f, angularSpeed * deltaTime, 0f);
+        }
+
+        // *****************************
+        // ResetRotationData
+        // *****************************
+        private static void ResetRotationData(State _state)
+        {
+            // Reset the target direction and relative angles to prevent continuous rotation
+            _state.dynamicData.rotationData.relativeLookAngles = Vector2.zero;
+            _state.dynamicData.rotationData.hasRelativeLookAngles = false;
         }
     }
 }

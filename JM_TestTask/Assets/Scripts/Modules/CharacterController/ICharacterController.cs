@@ -27,9 +27,14 @@ namespace Modules.CharacterController_Public
         void ToggleNavigationMode(NavigationMode _mode);
 
         /// <summary>
-        /// Sets the look direction for the character to smoothly rotate towards.
+        /// Sets the absolute look direction (world space vector) for the character to smoothly rotate towards.
         /// </summary>
         void LookDirection(Vector3 _dir);
+
+        /// <summary>
+        /// Sets the relative look direction (Euler angles in degrees) for the character to rotate by.
+        /// </summary>
+        void LookDirectionRelative(Vector2 _angles);
     }
 
     public enum NavigationMode

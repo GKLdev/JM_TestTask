@@ -2,20 +2,20 @@ using UnityEngine;
 using Modules.CharacterController_Public;
 using GDTUtils;
 
-namespace Test.TEST_CharacterController
+namespace Test.CharacterController
 {
-    public class TEST_CharacterController : MonoBehaviour
+    public class CharacterControllerTester : MonoBehaviour
     {
         [SerializeField]
         private SerializedInterface<ICharacterController> characterController = new();
 
         [SerializeField]
-        private Transform targetTransform;
+        private Transform targetTransform;  // Target for MoveToTarget
 
         [SerializeField]
-        private float mouseSensitivity = 2f;
+        private float mouseSensitivity = 2f;  // Mouse sensitivity for look direction
 
-        private bool isNavmeshMode = false;
+        private bool isNavmeshMode = false;  // Current navigation mode state
 
         // *****************************
         // Start
@@ -34,7 +34,7 @@ namespace Test.TEST_CharacterController
             }
 
             // Lock cursor for mouse look
-            //Cursor.lockState = CursorLockMode.Locked;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
 
@@ -77,13 +77,13 @@ namespace Test.TEST_CharacterController
         // *****************************
         private void HandleLookInput()
         {
-            // Get mouse input for look direction
+            // Get mouse input for look direction (relative angles)
             float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity;
             float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity;
 
-            // Calculate look direction based on mouse input
-            Vector3 lookDirection = new Vector3(mouseX, -mouseY, 1f).normalized;
-            characterController.Value.LookDirection(lookDirection);
+            // Calculate relative look direction based on mouse input
+            Vector2 relativeLookDir = new Vector2(mouseX, -mouseY);
+            characterController.Value.LookDirectionRelative(relativeLookDir);
         }
 
         // *****************************

@@ -7,7 +7,7 @@ using Zenject;
 
 namespace Modules.CharacterController
 {
-    public class CharacterController : LogicBase, ICharacterController
+    public class CharacterController : MonoBehaviour, ICharacterController
     {
         [Inject]
         private IModuleManager moduleMgr;
@@ -80,32 +80,54 @@ namespace Modules.CharacterController
         public void LookDirection(Vector3 _dir)
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
-            float floatPrecision = state.config.P_FloatPrecision;
-            if (_dir.sqrMagnitude < floatPrecision)
+
+            bool atNavmeshMode = state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh;
+            if (atNavmeshMode)
             {
-                throw new CharacterControllerException("Look direction cannot be zero.");
+                return;
             }
-            state.dynamicData.rotationData.targetLookDirection = _dir;
+
+            state.dynamicData.rotationData.targetLookDirection = _dir.normalized;
+            state.dynamicData.rotationData.hasRelativeLookAngles = false;
+        }
+
+        // *****************************
+        // LookDirectionRelative
+        // *****************************
+        public void LookDirectionRelative(Vector2 _angles)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+
+            bool atNavmeshMode = state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh;
+            if (atNavmeshMode)
+            {
+                return;
+            }
+
+            state.dynamicData.rotationData.relativeLookAngles = _angles;
+            state.dynamicData.rotationData.hasRelativeLookAngles = true;
         }
     }
 
     [System.Serializable]
     public class State
     {
-        public Transform                    transform;
-        public Transform                    verticalLookTransform;
-        public ConfigCharacterController    config;
-        public NavMeshAgent                 navAgent;
-        public Collider                     characterCollider;
-
+        public Transform transform;
+        [SerializeField]
+        public Transform verticalLookTransform;
+        [SerializeField]
+        public Collider characterCollider;
+        [SerializeField]
+        public ConfigCharacterController config;
+        public NavMeshAgent navAgent;
         public DynamicData dynamicData = new();
 
         public class DynamicData
         {
-            public GeneralData      generalData     = new();
-            public MovementData     movementData    = new();
-            public RotationData     rotationData    = new();
-            public CollisionData    collisionData   = new();
+            public GeneralData generalData = new();
+            public MovementData movementData = new();
+            public RotationData rotationData = new();
+            public CollisionData collisionData = new();
 
             public class GeneralData
             {
@@ -115,23 +137,25 @@ namespace Modules.CharacterController
 
             public class MovementData
             {
-                public IDynamicAxis movementAxisX;
-                public IDynamicAxis movementAxisZ;
-                public Vector3 targetPosition;
-                public bool hasTargetPosition = false;
-                public Vector3 currentVelocity = Vector3.zero;
-                public Vector3 desiredPosition;
+                public IDynamicAxis movementAxisX;      // For velocity along X axis
+                public IDynamicAxis movementAxisZ;      // For velocity along Z axis
+                public Vector3 targetPosition;          // Target position for Navmesh mode
+                public bool hasTargetPosition = false;  // Indicates if target position is set
+                public Vector3 currentVelocity = Vector3.zero; // Current movement velocity
+                public float verticalVelocity = 0f;     // Vertical velocity for gravity
+                public bool isGrounded = false;         // Indicates if the character is grounded
+                public Vector3 desiredPosition;         // Desired position after movement and collision resolution
                 public Vector2 inputDirection = Vector2.zero;
                 public NavigationMode navigationMode = NavigationMode.DirectControl;
-                public bool isGrounded = false;
-                public float verticalVelocity = 0f;
             }
 
             public class RotationData
             {
-                public IDynamicAxis rotationAxis;   // For angular rotation
-                public Vector3 targetLookDirection = Vector3.zero;
-                public float verticalLookAngle = 0f;
+                public IDynamicAxis rotationAxis;                   // For angular rotation
+                public Vector3 targetLookDirection = Vector3.zero;  // Absolute look direction
+                public Vector2 relativeLookAngles = Vector2.zero;   // Relative Euler angles (x: yaw, y: pitch)
+                public bool hasRelativeLookAngles = false;          // Flag to indicate if relative angles are set
+                public float verticalLookAngle = 0f;                // Current vertical look angle
             }
 
             public class CollisionData

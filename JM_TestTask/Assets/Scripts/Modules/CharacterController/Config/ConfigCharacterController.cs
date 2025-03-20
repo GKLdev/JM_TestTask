@@ -71,6 +71,10 @@ namespace Modules.CharacterController_Public
         [SerializeField]
         private float groundCheckExtraDistance = 0.1f;
 
+        [Tooltip("Maximum vertical look angle (pitch) in degrees")]
+        [SerializeField]
+        private float maxVerticalLookAngle = 45f;
+
         public float P_MaxSpeed => maxSpeed;
         public float P_RotationSpeed => rotationSpeed;
         public LayerMask P_CollisionLayer => collisionLayer;
@@ -87,5 +91,6 @@ namespace Modules.CharacterController_Public
         public float P_NavmeshStoppingDistance => navmeshStoppingDistance;
         public float P_GravityForce => gravityForce;
         public float P_GroundCheckExtraDistance => groundCheckExtraDistance;
+        public float P_MaxVerticalLookAngle => maxVerticalLookAngle;
     }
 }
