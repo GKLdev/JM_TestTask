@@ -11,7 +11,7 @@ namespace Modules.CharacterController
         public static void UpdateMovement(State _state)
         {
             // Skip if not in DirectControl mode
-            if (_state.dynamicData.movementData.navigationMode != NavigationMode.DirectControl)
+            if (_state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh)
             {
                 return;
             }
@@ -43,17 +43,9 @@ namespace Modules.CharacterController
             // Extract input and transform directions
             Vector2 inputDir = _state.dynamicData.movementData.inputDirection;
             float maxSpeed = _state.config.P_MaxSpeed;
-            Vector3 forward = _state.transform.forward;
-            Vector3 right = _state.transform.right;
-
-            // Normalize directions
-            forward.y = 0f;
-            right.y = 0f;
-            forward.Normalize();
-            right.Normalize();
 
             // Calculate target velocity
-            Vector3 targetVelocity = (forward * inputDir.y + right * inputDir.x) * maxSpeed;
+            Vector3 targetVelocity = new Vector3(inputDir.x * maxSpeed, 0f , inputDir.y * maxSpeed);
             return targetVelocity;
         }
 
@@ -73,8 +65,9 @@ namespace Modules.CharacterController
             float velocityX = _state.dynamicData.movementData.movementAxisX.UpdateAxis(deltaTime);
             float velocityZ = _state.dynamicData.movementData.movementAxisZ.UpdateAxis(deltaTime);
 
+
             // Construct new velocity
-            Vector3 newVelocity = new Vector3(velocityX, 0f, velocityZ);
+            Vector3 newVelocity = _state.transform.forward * velocityZ + _state.transform.right * velocityX;
             return newVelocity;
         }
 
@@ -128,7 +121,7 @@ namespace Modules.CharacterController
             Vector3 displacement = velocity * deltaTime;
 
             // Add vertical displacement from gravity
-            displacement.y += _state.dynamicData.movementData.verticalVelocity * deltaTime;
+            displacement += _state.transform.up * _state.dynamicData.movementData.verticalVelocity * deltaTime;
 
             float totalDistance = displacement.magnitude;
 

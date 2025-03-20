@@ -40,8 +40,12 @@ namespace Modules.CharacterController
             bool hasTarget = _state.dynamicData.movementData.hasTargetPosition;
             if (hasTarget)
             {
-                Vector3 targetPos = _state.dynamicData.movementData.targetPosition;
-                _state.navAgent.SetDestination(targetPos);
+                Vector3 targetPos   = _state.dynamicData.movementData.targetPosition;
+                bool    success     = _state.navAgent.SetDestination(targetPos);
+                if (!success)
+                {
+                    return;
+                }
             }
 
             // Check if we've reached the destination
@@ -58,21 +62,6 @@ namespace Modules.CharacterController
 
             // Resume movement if not stopped
             _state.navAgent.isStopped = false;
-
-            // Use NavMeshAgent's desired velocity for movement
-            Vector3 desiredVelocity = _state.navAgent.desiredVelocity;
-
-            // Smoothly adjust current velocity
-            _state.dynamicData.movementData.currentVelocity = CompMovement.SmoothVelocity(_state, desiredVelocity);
-
-            // Apply the smoothed velocity to the NavMeshAgent
-            _state.navAgent.velocity = _state.dynamicData.movementData.currentVelocity;
-
-            // Apply rotation
-            Vector3 nextPathPos = _state.navAgent.steeringTarget;
-            Vector3 desiredDir = (nextPathPos - _state.transform.position).normalized;
-
-            _state.dynamicData.rotationData.targetLookDirection = desiredDir;
         }
 
         // *****************************

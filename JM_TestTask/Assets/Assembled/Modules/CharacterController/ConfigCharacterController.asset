@@ -26,7 +26,7 @@ MonoBehaviour:
   rotationDownSpeed: 50
   useSmoothHorizontalRotation: 1
   useStepCollisionResolve: 1
-  collisionStepDistance: 0.2
+  collisionStepDistance: 0.05
   navmeshStoppingDistance: 0.1
   gravityForce: 9.81
   groundCheckExtraDistance: 0.1

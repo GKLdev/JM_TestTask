@@ -52,7 +52,6 @@ namespace Modules.CharacterController
             _state.navAgent.angularSpeed = _state.config.P_RotationSpeed;
             _state.navAgent.stoppingDistance = _state.config.P_NavmeshStoppingDistance;
             _state.navAgent.autoBraking = false;
-            _state.navAgent.updateRotation = false;
 
             // Initialize collider buffer
             _state.dynamicData.collisionData.colliderBuffer = new Collider[16]; // Adjust size as needed

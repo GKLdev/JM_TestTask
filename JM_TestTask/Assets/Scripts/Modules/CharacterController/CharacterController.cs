@@ -70,6 +70,12 @@ namespace Modules.CharacterController
         public void ToggleNavigationMode(NavigationMode _mode)
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+
+            // Reset movement and rotation data before switching modes
+            state.dynamicData.movementData.Reset();
+            state.dynamicData.rotationData.Reset();
+
+            // Set the new navigation mode and update Navmesh agent state
             state.dynamicData.movementData.navigationMode = _mode;
             CompNavmesh.UpdateNavmeshAgentState(state);
         }
@@ -147,6 +153,21 @@ namespace Modules.CharacterController
                 public Vector3 desiredPosition;         // Desired position after movement and collision resolution
                 public Vector2 inputDirection = Vector2.zero;
                 public NavigationMode navigationMode = NavigationMode.DirectControl;
+
+                // Reset all movement data
+                public void Reset()
+                {
+                    movementAxisX?.ResetAxis();
+                    movementAxisZ?.ResetAxis();
+                    targetPosition = Vector3.zero;
+                    hasTargetPosition = false;
+                    currentVelocity = Vector3.zero;
+                    verticalVelocity = 0f;
+                    isGrounded = false;
+                    desiredPosition = Vector3.zero;
+                    inputDirection = Vector2.zero;
+                    navigationMode = NavigationMode.DirectControl;
+                }
             }
 
             public class RotationData
@@ -156,6 +177,16 @@ namespace Modules.CharacterController
                 public Vector2 relativeLookAngles = Vector2.zero;   // Relative Euler angles (x: yaw, y: pitch)
                 public bool hasRelativeLookAngles = false;          // Flag to indicate if relative angles are set
                 public float verticalLookAngle = 0f;                // Current vertical look angle
+
+                // Reset all rotation data
+                public void Reset()
+                {
+                    rotationAxis?.ResetAxis();
+                    targetLookDirection = Vector3.zero;
+                    relativeLookAngles = Vector2.zero;
+                    hasRelativeLookAngles = false;
+                    verticalLookAngle = 0f;
+                }
             }
 
             public class CollisionData

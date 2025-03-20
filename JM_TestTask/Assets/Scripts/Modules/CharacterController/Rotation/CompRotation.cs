@@ -10,6 +10,14 @@ namespace Modules.CharacterController
         // *****************************
         public static void UpdateRotation(State _state)
         {
+            // Ignore rotation if moving by navmesh
+            bool ignore = _state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh;
+            if (ignore)
+            {
+                return;
+            }
+
+            // Relative or lookat rotation
             bool isRelativeRotation = _state.dynamicData.rotationData.hasRelativeLookAngles;
             if (isRelativeRotation)
             {
