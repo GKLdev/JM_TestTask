@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ConfigCharacterController
   m_EditorClassIdentifier: 
   maxSpeed: 5
+  strafeMaxSpeed: 3
   rotationSpeed: 50
   collisionLayer:
     serializedVersion: 2
@@ -22,10 +23,13 @@ MonoBehaviour:
   collisionCheckRadius: 0.5
   movementUpSpeed: 10
   movementDownSpeed: 10
+  strafeUpSpeed: 8
+  strafeDownSpeed: 8
   rotationUpSpeed: 50
   rotationDownSpeed: 50
   useSmoothHorizontalRotation: 1
   useStepCollisionResolve: 1
+  resetAxisOnDirectionChange: 1
   collisionStepDistance: 0.05
   navmeshStoppingDistance: 0.1
   gravityForce: 9.81

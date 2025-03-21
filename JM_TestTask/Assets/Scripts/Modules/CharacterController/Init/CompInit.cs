@@ -62,8 +62,12 @@ namespace Modules.CharacterController
             _state.dynamicData.movementData.movementAxisZ = factory.Produce();
             _state.dynamicData.rotationData.rotationAxis = factory.Produce();
 
+            // Strafe (X-axis) parameters
+            float strafeMaxSpeed = _state.config.P_StrafeMaxSpeed;
+            _state.dynamicData.movementData.movementAxisX.InitAxis(-strafeMaxSpeed, strafeMaxSpeed, _state.config.P_StrafeUpSpeed, _state.config.P_StrafeDownSpeed);
+
+            // Forward/Backward (Z-axis) parameters
             float maxSpeed = _state.config.P_MaxSpeed;
-            _state.dynamicData.movementData.movementAxisX.InitAxis(-maxSpeed, maxSpeed, _state.config.P_MovementUpSpeed, _state.config.P_MovementDownSpeed);
             _state.dynamicData.movementData.movementAxisZ.InitAxis(-maxSpeed, maxSpeed, _state.config.P_MovementUpSpeed, _state.config.P_MovementDownSpeed);
 
             // Initialize rotation axis

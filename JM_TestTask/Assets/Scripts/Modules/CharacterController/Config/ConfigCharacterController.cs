@@ -7,9 +7,13 @@ namespace Modules.CharacterController_Public
     [CreateAssetMenu(fileName = "ConfigCharacterController", menuName = "Configs/ConfigCharacterController")]
     public class ConfigCharacterController : ScriptableObject
     {
-        [Tooltip("Maximum speed of the character")]
+        [Tooltip("Maximum speed of the character for forward/backward movement")]
         [SerializeField]
         private float maxSpeed = 5f;
+
+        [Tooltip("Maximum speed of the character for strafing (sideways movement)")]
+        [SerializeField]
+        private float strafeMaxSpeed = 4f;
 
         [Tooltip("Speed of character rotation")]
         [SerializeField]
@@ -31,13 +35,21 @@ namespace Modules.CharacterController_Public
         [SerializeField]
         private float collisionCheckRadius = 0.5f;
 
-        [Tooltip("Speed of acceleration for movement")]
+        [Tooltip("Speed of acceleration for forward/backward movement")]
         [SerializeField]
         private float movementUpSpeed = 10f;
 
-        [Tooltip("Speed of deceleration for movement")]
+        [Tooltip("Speed of deceleration for forward/backward movement")]
         [SerializeField]
         private float movementDownSpeed = 10f;
+
+        [Tooltip("Speed of acceleration for strafing (sideways movement)")]
+        [SerializeField]
+        private float strafeUpSpeed = 8f;
+
+        [Tooltip("Speed of deceleration for strafing (sideways movement)")]
+        [SerializeField]
+        private float strafeDownSpeed = 8f;
 
         [Tooltip("Speed of rotation acceleration")]
         [SerializeField]
@@ -54,6 +66,10 @@ namespace Modules.CharacterController_Public
         [Tooltip("Use step-based collision resolution")]
         [SerializeField]
         private bool useStepCollisionResolve = true;
+
+        [Tooltip("Reset movement axes when direction reverses (e.g., forward to backward or strafe left to right)")]
+        [SerializeField]
+        private bool resetAxisOnDirectionChange = true;
 
         [Tooltip("Distance per step for collision resolution")]
         [SerializeField]
@@ -76,6 +92,7 @@ namespace Modules.CharacterController_Public
         private float maxVerticalLookAngle = 45f;
 
         public float P_MaxSpeed => maxSpeed;
+        public float P_StrafeMaxSpeed => strafeMaxSpeed;
         public float P_RotationSpeed => rotationSpeed;
         public LayerMask P_CollisionLayer => collisionLayer;
         public float P_FloatPrecision => floatPrecision;
@@ -83,10 +100,13 @@ namespace Modules.CharacterController_Public
         public float P_CollisionCheckRadius => collisionCheckRadius;
         public float P_MovementUpSpeed => movementUpSpeed;
         public float P_MovementDownSpeed => movementDownSpeed;
+        public float P_StrafeUpSpeed => strafeUpSpeed;
+        public float P_StrafeDownSpeed => strafeDownSpeed;
         public float P_RotationUpSpeed => rotationUpSpeed;
         public float P_RotationDownSpeed => rotationDownSpeed;
         public bool P_UseSmoothHorizontalRotation => useSmoothHorizontalRotation;
         public bool P_UseStepCollisionResolve => useStepCollisionResolve;
+        public bool P_ResetAxisOnDirectionChange => resetAxisOnDirectionChange;
         public float P_CollisionStepDistance => collisionStepDistance;
         public float P_NavmeshStoppingDistance => navmeshStoppingDistance;
         public float P_GravityForce => gravityForce;

@@ -42,10 +42,11 @@ namespace Modules.CharacterController
         {
             // Extract input and transform directions
             Vector2 inputDir = _state.dynamicData.movementData.inputDirection;
-            float maxSpeed = _state.config.P_MaxSpeed;
+            float maxSpeed = _state.config.P_MaxSpeed;         // Speed for forward/backward movement (Z-axis)
+            float strafeMaxSpeed = _state.config.P_StrafeMaxSpeed; // Speed for strafing (X-axis)
 
-            // Calculate target velocity
-            Vector3 targetVelocity = new Vector3(inputDir.x * maxSpeed, 0f , inputDir.y * maxSpeed);
+            // Calculate target velocity with different speeds for strafe (X) and forward/backward (Z)
+            Vector3 targetVelocity = new Vector3(inputDir.x * strafeMaxSpeed, 0f, inputDir.y * maxSpeed);
             return targetVelocity;
         }
 
@@ -57,6 +58,28 @@ namespace Modules.CharacterController
             // Extract components
             float deltaTime = Time.deltaTime;
 
+            // Get current velocities directly using GetProgress()
+            float currentVelocityX = _state.dynamicData.movementData.movementAxisX.GetProgress();
+            float currentVelocityZ = _state.dynamicData.movementData.movementAxisZ.GetProgress();
+
+            // Check if we should reset axes on direction change
+            bool resetAxisOnDirectionChange = _state.config.P_ResetAxisOnDirectionChange;
+
+            if (resetAxisOnDirectionChange)
+            {
+                // Reset strafe axis (X) if direction reverses
+                if (currentVelocityX * _targetVelocity.x < 0f) // Different signs indicate direction reversal
+                {
+                    _state.dynamicData.movementData.movementAxisX.ResetAxis();
+                }
+
+                // Reset forward/backward axis (Z) if direction reverses
+                if (currentVelocityZ * _targetVelocity.z < 0f) // Different signs indicate direction reversal
+                {
+                    _state.dynamicData.movementData.movementAxisZ.ResetAxis();
+                }
+            }
+
             // Update axes with target values
             _state.dynamicData.movementData.movementAxisX.SetTarget(_targetVelocity.x);
             _state.dynamicData.movementData.movementAxisZ.SetTarget(_targetVelocity.z);
@@ -64,7 +87,6 @@ namespace Modules.CharacterController
             // Update axes to get current velocity components
             float velocityX = _state.dynamicData.movementData.movementAxisX.UpdateAxis(deltaTime);
             float velocityZ = _state.dynamicData.movementData.movementAxisZ.UpdateAxis(deltaTime);
-
 
             // Construct new velocity
             Vector3 newVelocity = _state.transform.forward * velocityZ + _state.transform.right * velocityX;
