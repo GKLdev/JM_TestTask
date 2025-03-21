@@ -96,7 +96,7 @@ namespace Test.CharacterController
             {
                 isNavmeshMode = !isNavmeshMode;
                 NavigationMode newMode = isNavmeshMode ? NavigationMode.Navmesh : NavigationMode.DirectControl;
-                characterController.Value.ToggleNavigationMode(newMode);
+                characterController.Value.SetNavigationMode(newMode);
                 Debug.Log($"Navigation mode switched to: {newMode}");
             }
         }

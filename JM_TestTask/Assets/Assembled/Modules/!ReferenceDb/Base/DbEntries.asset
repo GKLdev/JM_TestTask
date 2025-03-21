@@ -12,4 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1853656c92057584cb4ec55dffc600dd, type: 3}
   m_Name: DbEntries
   m_EditorClassIdentifier: 
-  categories: []
+  categories:
+  - categoryName: Characters
+    entries:
+    - alias: Character_Player
+      entry: {fileID: 11400000, guid: 4c48bfed98bb1fe40971b94c47e857cd, type: 2}
+    - alias: Character_Test_AI
+      entry: {fileID: 11400000, guid: 65974e69ea4a04c41ba9a3be1353680f, type: 2}

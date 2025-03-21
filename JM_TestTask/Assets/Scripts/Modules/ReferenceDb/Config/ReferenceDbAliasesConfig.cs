@@ -17,6 +17,11 @@ namespace Modules.ReferenceDb_Public
     public class ReferenceDbAliasesConfig
     {   
     
+		// Characters //
+
+		public const int Character_Player = 0;
+		public const int Character_Test_AI = 1;
+
 		// Dictionaries //
 
 		// *****************************
@@ -34,10 +39,22 @@ namespace Modules.ReferenceDb_Public
 
 		private readonly Dictionary<string, int> dictAliasToId = new()
 		{
+		    { "Character_Player", 0 },
+		    { "Character_Test_AI", 1 },
 
 		};
 
     }
     
     // CATEGORY ENUMS:
+    /// <summary>
+    /// Elements of 'CHARACTERS' category.
+    /// DO NOT serialize this enum.
+    /// </summary>
+    public enum CATEGORY_CHARACTERS
+    {
+		Character_Player = 0,
+		Character_Test_AI = 1,
+
+    }
 }

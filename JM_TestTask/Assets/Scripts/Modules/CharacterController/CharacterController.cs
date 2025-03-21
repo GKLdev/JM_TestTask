@@ -1,5 +1,6 @@
 using GDTUtils;
 using Modules.CharacterController_Public;
+using Modules.CharacterControllerView_Public;
 using Modules.ModuleManager_Public;
 using UnityEngine;
 using UnityEngine.AI;
@@ -7,13 +8,17 @@ using Zenject;
 
 namespace Modules.CharacterController
 {
-    public class CharacterController : MonoBehaviour, ICharacterController
+    public class CharacterController : LogicBase, ICharacterController
     {
         [Inject]
         private IModuleManager moduleMgr;
 
         [SerializeField]
         private State state = new();
+
+        public Vector3 P_Position       { get => state.transform.position; set => state.transform.position = value; }
+        public Quaternion P_Rotation    { get => state.transform.rotation; set => state.transform.rotation = value; }
+        public Vector3 P_Orientation    { get => state.transform.forward; set => state.transform.forward = value; }
 
         // *****************************
         // InitModule
@@ -65,9 +70,9 @@ namespace Modules.CharacterController
         }
 
         // *****************************
-        // ToggleNavigationMode
+        // SetNavigationMode
         // *****************************
-        public void ToggleNavigationMode(NavigationMode _mode)
+        public void SetNavigationMode(NavigationMode _mode)
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
 
@@ -113,19 +118,96 @@ namespace Modules.CharacterController
             state.dynamicData.rotationData.relativeLookAngles = _angles;
             state.dynamicData.rotationData.hasRelativeLookAngles = true;
         }
+
+        // *****************************
+        // OnAdded
+        // *****************************
+        public void OnAdded()
+        {
+        }
+
+        // *****************************
+        // OnAwake
+        // *****************************
+        public void OnAwake()
+        {
+        }
+
+        // *****************************
+        // OnSlept
+        // *****************************
+        public void OnSlept()
+        {
+        }
+
+        // *****************************
+        // Dispose
+        // *****************************
+        public void Dispose()
+        {
+        }
+
+        // *****************************
+        // AttachVisual
+        // *****************************
+        public void AttachVisual(ICharacterControllerView _view)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+
+            if (_view == null)
+            {
+                Debug.Assert(false, "_view is Null.");
+            }
+
+            //_view.P_GameObjectAccess.transform.position = P_Position;
+            //_view.P_GameObjectAccess.transform.rotation = P_Rotation;
+            //_view.P_GameObjectAccess.transform.SetParent(state.viewRoot);
+
+            state.dynamicData.generalData.view = _view;
+            state.dynamicData.generalData.view.InitModule();
+        }
+
+        // *****************************
+        // SetupConfig
+        // *****************************
+        public void SetupConfig(ConfigCharacterController _config)
+        {
+            if (state.dynamicData.generalData.isInitialized)
+            {
+                Debug.Assert(false, "Cant setup config if character controller is initialized!");
+            }
+
+            state.config = _config;
+        }
+
+        // *****************************
+        // GetView
+        // *****************************
+        public ICharacterControllerView GetView()
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+
+            throw new System.NotImplementedException();
+        }
     }
 
     [System.Serializable]
     public class State
     {
         public Transform transform;
+        
         [SerializeField]
         public Transform verticalLookTransform;
+        
         [SerializeField]
         public Collider characterCollider;
+        
         [SerializeField]
         public ConfigCharacterController config;
         public NavMeshAgent navAgent;
+
+        public Transform viewRoot;
+
         public DynamicData dynamicData = new();
 
         public class DynamicData
@@ -139,6 +221,8 @@ namespace Modules.CharacterController
             {
                 public bool isInitialized = false;
                 public bool isEnabled = false;
+
+                public ICharacterControllerView view;
             }
 
             public class MovementData

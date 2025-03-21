@@ -1,10 +1,19 @@
+using GDTUtils.Common;
+using Modules.CharacterControllerView_Public;
+using Modules.CharacterFacade_Public;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Modules.CharacterController_Public
 {
-    public interface ICharacterController : IModuleInit, IModuleUpdate
+    public interface ICharacterController : 
+        IModuleInit, 
+        IModuleUpdate, 
+        ITransformData, 
+        IDisposable,
+        ICharacterFacadeCallbacks
     {
         /// <summary>
         /// Sets the movement direction for the character.
@@ -24,7 +33,7 @@ namespace Modules.CharacterController_Public
         /// <summary>
         /// Sets the navigation mode for the character.
         /// </summary>
-        void ToggleNavigationMode(NavigationMode _mode);
+        void SetNavigationMode(NavigationMode _mode);
 
         /// <summary>
         /// Sets the absolute look direction (world space vector) for the character to smoothly rotate towards.
@@ -35,6 +44,21 @@ namespace Modules.CharacterController_Public
         /// Sets the relative look direction (Euler angles in degrees) for the character to rotate by.
         /// </summary>
         void LookDirectionRelative(Vector2 _angles);
+
+        /// <summary>
+        /// Assign view to controller.
+        /// </summary>
+        void AttachVisual(ICharacterControllerView _view);
+
+        /// <summary>
+        /// Assign config. Should only be called before controller is initialized.
+        /// </summary>
+        void SetupConfig(ConfigCharacterController _config);
+
+        /// <summary>
+        /// Returns visual part of character controller if assigned.
+        /// </summary>
+        ICharacterControllerView GetView();
     }
 
     public enum NavigationMode
