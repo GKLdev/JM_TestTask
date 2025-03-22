@@ -2,6 +2,7 @@ using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
 using Modules.ModuleManager_Public;
+using Modules.TimeManager_Public;
 using UnityEngine;
 using UnityEngine.AI;
 using Zenject;
@@ -10,22 +11,22 @@ namespace Modules.CharacterController
 {
     public class CharacterController : LogicBase, ICharacterController
     {
+        public Vector3 P_Position { get => state.transform.position; set => state.transform.position = value; }
+        public Quaternion P_Rotation { get => state.transform.rotation; set => state.transform.rotation = value; }
+        public Vector3 P_Orientation { get => state.transform.forward; set => state.transform.forward = value; }
+
         [Inject]
         private IModuleManager moduleMgr;
 
         [SerializeField]
         private State state = new();
 
-        public Vector3 P_Position       { get => state.transform.position; set => state.transform.position = value; }
-        public Quaternion P_Rotation    { get => state.transform.rotation; set => state.transform.rotation = value; }
-        public Vector3 P_Orientation    { get => state.transform.forward; set => state.transform.forward = value; }
-
         // *****************************
         // InitModule
         // *****************************
         public void InitModule()
         {
-            CompInit.Init(state);
+            CompInit.Init(state, moduleMgr.Container);
         }
 
         // *****************************
@@ -131,6 +132,7 @@ namespace Modules.CharacterController
         // *****************************
         public void OnAwake()
         {
+            state.transform.gameObject.SetActive(true);
         }
 
         // *****************************
@@ -138,6 +140,8 @@ namespace Modules.CharacterController
         // *****************************
         public void OnSlept()
         {
+            CompInit.ResetState(state);
+            state.transform.gameObject.SetActive(false);
         }
 
         // *****************************
@@ -145,6 +149,7 @@ namespace Modules.CharacterController
         // *****************************
         public void Dispose()
         {
+            // TODO
         }
 
         // *****************************
@@ -159,9 +164,9 @@ namespace Modules.CharacterController
                 Debug.Assert(false, "_view is Null.");
             }
 
-            //_view.P_GameObjectAccess.transform.position = P_Position;
-            //_view.P_GameObjectAccess.transform.rotation = P_Rotation;
-            //_view.P_GameObjectAccess.transform.SetParent(state.viewRoot);
+            _view.P_GameObjectAccess.transform.position = P_Position;
+            _view.P_GameObjectAccess.transform.rotation = P_Rotation;
+            _view.P_GameObjectAccess.transform.SetParent(state.viewRoot);
 
             state.dynamicData.generalData.view = _view;
             state.dynamicData.generalData.view.InitModule();
@@ -187,7 +192,7 @@ namespace Modules.CharacterController
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
 
-            throw new System.NotImplementedException();
+            return state.dynamicData.generalData.view;
         }
     }
 
@@ -219,22 +224,24 @@ namespace Modules.CharacterController
 
             public class GeneralData
             {
-                public bool isInitialized = false;
-                public bool isEnabled = false;
-
+                public bool                     isInitialized = false;
+                public bool                     isEnabled = false;
+                public TimeLayerType            timeLayer;
+                public ITimeManager             timeMgr;
+                public float                    deltaTime;
                 public ICharacterControllerView view;
             }
 
             public class MovementData
             {
-                public IDynamicAxis movementAxisX;      // For velocity along X axis
-                public IDynamicAxis movementAxisZ;      // For velocity along Z axis
-                public Vector3 targetPosition;          // Target position for Navmesh mode
-                public bool hasTargetPosition = false;  // Indicates if target position is set
-                public Vector3 currentVelocity = Vector3.zero; // Current movement velocity
-                public float verticalVelocity = 0f;     // Vertical velocity for gravity
-                public bool isGrounded = false;         // Indicates if the character is grounded
-                public Vector3 desiredPosition;         // Desired position after movement and collision resolution
+                public IDynamicAxis movementAxisX;
+                public IDynamicAxis movementAxisZ;
+                public Vector3 targetPosition;
+                public bool hasTargetPosition = false;
+                public Vector3 currentVelocity = Vector3.zero;
+                public float verticalVelocity = 0f;
+                public bool isGrounded = false;
+                public Vector3 desiredPosition;
                 public Vector2 inputDirection = Vector2.zero;
                 public NavigationMode navigationMode = NavigationMode.DirectControl;
 
@@ -256,11 +263,11 @@ namespace Modules.CharacterController
 
             public class RotationData
             {
-                public IDynamicAxis rotationAxis;                   // For angular rotation
-                public Vector3 targetLookDirection = Vector3.zero;  // Absolute look direction
-                public Vector2 relativeLookAngles = Vector2.zero;   // Relative Euler angles (x: yaw, y: pitch)
-                public bool hasRelativeLookAngles = false;          // Flag to indicate if relative angles are set
-                public float verticalLookAngle = 0f;                // Current vertical look angle
+                public IDynamicAxis rotationAxis;
+                public Vector3 targetLookDirection = Vector3.zero;
+                public Vector2 relativeLookAngles = Vector2.zero;
+                public bool hasRelativeLookAngles = false;
+                public float verticalLookAngle = 0f;
 
                 // Reset all rotation data
                 public void Reset()

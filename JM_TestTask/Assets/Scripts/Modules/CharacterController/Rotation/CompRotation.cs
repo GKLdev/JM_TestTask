@@ -127,7 +127,7 @@ namespace Modules.CharacterController
             _state.dynamicData.rotationData.rotationAxis.SetTarget(_angleDiff);
 
             // Update axis to get current angular speed
-            float deltaTime = Time.deltaTime;
+            float deltaTime = _state.dynamicData.generalData.deltaTime;
             float angularSpeed = _state.dynamicData.rotationData.rotationAxis.UpdateAxis(deltaTime);
 
             // Apply rotation

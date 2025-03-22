@@ -31,7 +31,7 @@ namespace Modules.TimeManager
         // *****************************
         // OnUpdate 
         // *****************************
-        private void Update()
+        public void OnUpdate()
         {
             if (!state.dynamicData.initialised || !state.dynamicData.evaluateTime)
             {

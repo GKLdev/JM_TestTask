@@ -56,7 +56,7 @@ namespace Modules.CharacterController
         public static Vector3 SmoothVelocity(State _state, Vector3 _targetVelocity)
         {
             // Extract components
-            float deltaTime = Time.deltaTime;
+            float deltaTime = _state.dynamicData.generalData.deltaTime;
 
             // Get current velocities directly using GetProgress()
             float currentVelocityX = _state.dynamicData.movementData.movementAxisX.GetProgress();
@@ -111,7 +111,7 @@ namespace Modules.CharacterController
             {
                 // Apply gravity to vertical velocity
                 float gravityForce = _state.config.P_GravityForce;
-                float deltaTime = Time.deltaTime;
+                float deltaTime = _state.dynamicData.generalData.deltaTime;
                 _state.dynamicData.movementData.verticalVelocity -= gravityForce * deltaTime;
             }
             else
@@ -139,7 +139,7 @@ namespace Modules.CharacterController
         {
             // Calculate total displacement
             Vector3 velocity = _state.dynamicData.movementData.currentVelocity;
-            float deltaTime = Time.deltaTime;
+            float deltaTime = _state.dynamicData.generalData.deltaTime;
             Vector3 displacement = velocity * deltaTime;
 
             // Add vertical displacement from gravity

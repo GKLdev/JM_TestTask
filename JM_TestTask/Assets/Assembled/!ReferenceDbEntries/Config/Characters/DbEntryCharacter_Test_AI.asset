@@ -15,8 +15,10 @@ MonoBehaviour:
   id: 1
   alias: Character_Test_AI
   subEntries: []
-  Config: {fileID: 0}
-  Damageable: {fileID: 0}
-  AITemplate: {fileID: 0}
-  CharacterFacade: {fileID: 0}
-  CharacterVisual: {fileID: 0}
+  Config: {fileID: 11400000, guid: 1315ce8e9244e39448e53d2654afcfc8, type: 2}
+  Damageable: {fileID: 11400000, guid: 1e532ac9a0f283748b11f5fe086a3e65, type: 2}
+  AITemplate: {fileID: 11400000, guid: e02c91faa880f5b4fb4c16be43b1feb3, type: 2}
+  CharacterFacade: {fileID: 1284513860685598400, guid: 9f47ce510cae1454c871e4d7c122541f,
+    type: 3}
+  CharacterVisual: {fileID: 1077889485122580821, guid: 5a2d231a4e2bdee4da09f09959912759,
+    type: 3}

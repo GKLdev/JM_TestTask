@@ -10,6 +10,8 @@ namespace Modules.CharacterControllerView
 {
     public class CharacterControllerView : LogicBase, ICharacterControllerView
     {
+        public GameObject P_GameObjectAccess => state.root.gameObject;
+
         [Inject]
         private IModuleManager moduleMgr;
 
@@ -65,6 +67,11 @@ namespace Modules.CharacterControllerView
         // *****************************
         public void OnAwake()
         {
+            bool needSetActive = !gameObject.activeInHierarchy;
+            if (needSetActive)
+            {
+                gameObject.SetActive(true);
+            }
         }
 
         // *****************************
@@ -72,6 +79,13 @@ namespace Modules.CharacterControllerView
         // *****************************
         public void OnSlept()
         {
+            state.dynamicData.Reset();
+
+            bool needSetInnactive = gameObject.activeInHierarchy;
+            if (needSetInnactive)
+            {
+                gameObject.SetActive(false);
+            }
         }
 
         // *****************************
@@ -85,6 +99,8 @@ namespace Modules.CharacterControllerView
     [System.Serializable]
     public class State
     {
+        public Transform root;
+
         // Cached assert messages to avoid GC allocations
         private const string AssertMsgStateRootsNull = "StateRoots array is not assigned in CharacterControllerView.";
         private const string AssertMsgStateRootNull = "State root at index {0} is not assigned in CharacterControllerView.";
@@ -105,7 +121,6 @@ namespace Modules.CharacterControllerView
 
             public void Reset()
             {
-                isInitialized = false;
                 characterController = null;
                 currentState = VisualState.Idle;
             }

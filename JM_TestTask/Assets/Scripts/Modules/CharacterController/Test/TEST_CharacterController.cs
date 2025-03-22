@@ -1,11 +1,16 @@
 using UnityEngine;
 using Modules.CharacterController_Public;
 using GDTUtils;
+using Zenject;
+using Modules.TimeManager_Public;
 
 namespace Test.CharacterController
 {
     public class CharacterControllerTester : MonoBehaviour
     {
+        [Inject]
+        ITimeManager timeMgr;
+
         [SerializeField]
         private SerializedInterface<ICharacterController> characterController = new();
 
@@ -36,6 +41,8 @@ namespace Test.CharacterController
             // Lock cursor for mouse look
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
+
+            timeMgr.ToggleTimeEvaluation(true);
         }
 
         // *****************************

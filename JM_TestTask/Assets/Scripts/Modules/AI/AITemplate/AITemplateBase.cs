@@ -7,19 +7,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using Zenject;
 
 namespace Modules.AITemplate_Public
 {
     public interface IAITemplate
     {
-        void Init(IAIBrain _brain, ICharacterFacade _character);
+        void Init(IAIBrain _brain, ICharacterFacade _character, DiContainer _container);
         void UpdateTemplate(float _delta);
         void ToggleActive(bool _val);
         void ResetTemplate();
         IAITemplate Clone();
     }
 
-    //[CreateAssetMenu(fileName = "ConfigCharacterManager", menuName = "Configs/Character/Manager")]
     public abstract class AITemplateBase : DbEntryBase, IAITemplate
     {
         private bool isActive = false;
@@ -27,16 +27,16 @@ namespace Modules.AITemplate_Public
         
         protected IAIBrain          brain;
         protected ICharacterFacade  character;
-
-        //private GDTStateMachine.StateMachine<> stateMachine = new();
+        protected DiContainer       diContainer;
 
         // *****************************
         // Init 
         // *****************************
-        public void Init(IAIBrain _brain, ICharacterFacade _character)
+        public void Init(IAIBrain _brain, ICharacterFacade _character, DiContainer _container)
         {
             brain       = _brain;
             character   = _character;
+            diContainer = _container;
             OnInit();
             initialized = true;
         }

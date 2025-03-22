@@ -15,8 +15,10 @@ MonoBehaviour:
   id: 0
   alias: Character_Player
   subEntries: []
-  Config: {fileID: 0}
-  Damageable: {fileID: 0}
+  Config: {fileID: 11400000, guid: 1315ce8e9244e39448e53d2654afcfc8, type: 2}
+  Damageable: {fileID: 11400000, guid: 7f147da4c61d7c1429b10a37a4480ada, type: 2}
   AITemplate: {fileID: 0}
-  CharacterFacade: {fileID: 0}
-  CharacterVisual: {fileID: 0}
+  CharacterFacade: {fileID: 1284513860685598400, guid: 9f47ce510cae1454c871e4d7c122541f,
+    type: 3}
+  CharacterVisual: {fileID: 1077889485122580821, guid: 5a2d231a4e2bdee4da09f09959912759,
+    type: 3}

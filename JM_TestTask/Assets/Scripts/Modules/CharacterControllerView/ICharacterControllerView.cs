@@ -1,3 +1,4 @@
+using GDTUtils.Common;
 using Modules.CharacterController_Public;
 using Modules.CharacterFacade_Public;
 using System.Collections;
@@ -6,7 +7,7 @@ using UnityEngine;
 
 namespace Modules.CharacterControllerView_Public
 {
-    public interface ICharacterControllerView : IModuleInit, IModuleUpdate, ICharacterFacadeCallbacks
+    public interface ICharacterControllerView : IModuleInit, IModuleUpdate, ICharacterFacadeCallbacks, IGameObjectAccess
     {
         /// <summary>
         /// Sets the visual state of the character (e.g., Idle or Dead).

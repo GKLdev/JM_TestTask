@@ -1,3 +1,4 @@
+using Modules.TimeManager_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -91,6 +92,10 @@ namespace Modules.CharacterController_Public
         [SerializeField]
         private float maxVerticalLookAngle = 45f;
 
+        [Tooltip("Time layer used fo delta time calcuilation")]
+        [SerializeField]
+        private TimeLayerType timeLayer = TimeLayerType.World;
+
         public float P_MaxSpeed => maxSpeed;
         public float P_StrafeMaxSpeed => strafeMaxSpeed;
         public float P_RotationSpeed => rotationSpeed;
@@ -112,5 +117,6 @@ namespace Modules.CharacterController_Public
         public float P_GravityForce => gravityForce;
         public float P_GroundCheckExtraDistance => groundCheckExtraDistance;
         public float P_MaxVerticalLookAngle => maxVerticalLookAngle;
+        public TimeLayerType P_TimeLayer => timeLayer;
     }
 }

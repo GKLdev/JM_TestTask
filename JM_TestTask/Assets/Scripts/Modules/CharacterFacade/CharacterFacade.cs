@@ -99,7 +99,7 @@ namespace Modules.CharacterFacade
         // *****************************
         void OnDamage(bool _isDead) {
             
-            // mb do this at death or on damage action
+            // TODO
             if (_isDead)
             {
                 Debug.Log($"Character={this.name} is dead!");
@@ -118,6 +118,7 @@ namespace Modules.CharacterFacade
         {
             P_Controller.MoveToTarget(P_Controller.P_Position); // sets controller to path mode and ensured it will not move anywhere
             aiBrain.Value.ToggleAIBrain(true);
+            P_Controller.SetNavigationMode(NavigationMode.Navmesh);
         }
 
 

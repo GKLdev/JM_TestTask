@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   state:
+    root: {fileID: 9071280638546656428}
     stateRoots:
     - {fileID: 492218678814811093}
     - {fileID: 8357346020843701897}

@@ -68,7 +68,7 @@ namespace Modules.ModuleManager
                 bool castFailed = moduleCasted == null;
                 if (castFailed)
                 {
-                    Debug.LogWarning($"Module cannot be added since it does not implement {typeof(TIface)} or its NULL!");
+                    Debug.LogWarning($"Module={_module} cannot be added since it does not implement {typeof(TIface)} or its NULL!");
                     return;
                 }
 

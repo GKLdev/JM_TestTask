@@ -5,6 +5,7 @@ using Modules.CharacterFacade_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 namespace Modules.AIBrain_Public
 {

@@ -66,7 +66,7 @@ namespace Modules.AIBrain
             {
                 template                        = ScriptableObject.Instantiate(template);
                 state.dynamic.templateCasted    = (template as IAITemplate)?.Clone();
-                state.dynamic.templateCasted.Init(this, state.dynamic.facade);
+                state.dynamic.templateCasted.Init(this, state.dynamic.facade, moduleMgr.Container);
             }
 
             state.initialized       = true;

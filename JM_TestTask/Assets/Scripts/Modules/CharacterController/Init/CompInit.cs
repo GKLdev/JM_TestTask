@@ -1,8 +1,10 @@
 using GDTUtils;
+using Modules.TimeManager_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Zenject;
 
 namespace Modules.CharacterController
 {
@@ -11,7 +13,7 @@ namespace Modules.CharacterController
         // *****************************
         // Init
         // *****************************
-        public static void Init(State _state)
+        public static void Init(State _state, DiContainer _container)
         {
             // Validate config
             if (_state.config == null)
@@ -41,8 +43,14 @@ namespace Modules.CharacterController
                 return;
             }
 
-            // Initialize NavMeshAgent
-            _state.navAgent = _state.transform.gameObject.GetComponent<NavMeshAgent>();
+            // Init dependencies
+            _state.dynamicData.generalData.timeMgr = _container.Resolve<ITimeManager>();
+
+            // Setup time layer
+            _state.dynamicData.generalData.timeLayer = _state.config.P_TimeLayer;
+
+           // Initialize NavMeshAgent
+           _state.navAgent = _state.transform.gameObject.GetComponent<NavMeshAgent>();
             if (_state.navAgent == null)
             {
                 _state.navAgent = _state.transform.gameObject.AddComponent<NavMeshAgent>();
@@ -77,6 +85,15 @@ namespace Modules.CharacterController
             // Mark as initialized
             _state.dynamicData.generalData.isInitialized = true;
             _state.dynamicData.generalData.isEnabled = true;
+        }
+
+        // *****************************
+        // ResetState
+        // *****************************
+        public static void ResetState(State _state)
+        {
+            _state.dynamicData.movementData.Reset();
+            _state.dynamicData.rotationData.Reset();
         }
     }
 }

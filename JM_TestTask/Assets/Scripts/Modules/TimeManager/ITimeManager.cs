@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Modules.TimeManager_Public
 {
 
-    public interface ITimeManager : IDisposable, IModuleInit // IModuleUpdate
+    public interface ITimeManager : IDisposable, IModuleInit, IModuleUpdate
     {
         /// <summary>
         /// Must be set to true is you want this system to start working.
