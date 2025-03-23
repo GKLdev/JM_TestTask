@@ -42,8 +42,8 @@ namespace Modules.CharacterController
         {
             // Extract input and transform directions
             Vector2 inputDir = _state.dynamicData.movementData.inputDirection;
-            float maxSpeed = _state.config.P_MaxSpeed;         // Speed for forward/backward movement (Z-axis)
-            float strafeMaxSpeed = _state.config.P_StrafeMaxSpeed; // Speed for strafing (X-axis)
+            float maxSpeed          = _state.dynamicData.movementData.currentMaxSpeed;
+            float strafeMaxSpeed    = _state.dynamicData.movementData.currentMaxStrafeSpeed;
 
             // Calculate target velocity with different speeds for strafe (X) and forward/backward (Z)
             Vector3 targetVelocity = new Vector3(inputDir.x * strafeMaxSpeed, 0f, inputDir.y * maxSpeed);

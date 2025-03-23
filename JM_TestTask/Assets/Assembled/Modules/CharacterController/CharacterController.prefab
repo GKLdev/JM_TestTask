@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 1789213114917140642}
   - component: {fileID: 3911740681446590731}
   - component: {fileID: 7155053610335987462}
+  - component: {fileID: 7910775862847187626}
   m_Layer: 0
   m_Name: CharacterController
   m_TagString: Untagged
@@ -38,6 +39,7 @@ Transform:
   m_Children:
   - {fileID: 744183032751996502}
   - {fileID: 2394105977232958975}
+  - {fileID: 5539898669630689577}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1284513860685598400
@@ -58,6 +60,8 @@ MonoBehaviour:
     <Field>k__BackingField: {fileID: 1789213114917140642}
   aiBrain:
     <Field>k__BackingField: {fileID: 3911740681446590731}
+  statsSystem:
+    <Field>k__BackingField: {fileID: 7910775862847187626}
 --- !u!114 &4892011881632774652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,27 +76,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   state:
     transform: {fileID: 5499475061295609191}
-    verticalLookTransform: {fileID: 0}
     characterCollider: {fileID: 8449714817210300121}
     config: {fileID: 11400000, guid: 1315ce8e9244e39448e53d2654afcfc8, type: 2}
     navAgent: {fileID: 5315622419344743280}
     viewRoot: {fileID: 744183032751996502}
-    dynamicData:
-      generalData:
-        isInitialized: 0
-        isEnabled: 0
-        timeLayer: 0
-        deltaTime: 0
-        isPlayer: 0
-      movementData:
-        targetPosition: {x: 0, y: 0, z: 0}
-        hasTargetPosition: 0
-        currentVelocity: {x: 0, y: 0, z: 0}
-        verticalVelocity: 0
-        isGrounded: 0
-        desiredPosition: {x: 0, y: 0, z: 0}
-        inputDirection: {x: 0, y: 0}
-        navigationMode: 0
 --- !u!136 &8449714817210300121
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -154,7 +141,7 @@ MonoBehaviour:
     debug: 0
     registerOnStart: 0
     toggleOnStart: 0
-    collision: {fileID: 8449714817210300121}
+    collision: {fileID: 7040755554645481892}
     config: {fileID: 0}
 --- !u!114 &3911740681446590731
 MonoBehaviour:
@@ -194,6 +181,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61df752a5bcbaff4c8872290f6f4ae1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7910775862847187626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721065708610903175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d3196b09c496244886fba4751ce40ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state:
+    character:
+      <Field>k__BackingField: {fileID: 4892011881632774652}
+    damageable:
+      <Field>k__BackingField: {fileID: 1789213114917140642}
 --- !u!1 &2387372281945926067
 GameObject:
   m_ObjectHideFlags: 0
@@ -308,3 +312,58 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &9202963759023299679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5539898669630689577}
+  - component: {fileID: 7040755554645481892}
+  m_Layer: 8
+  m_Name: Hitbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5539898669630689577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202963759023299679}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5499475061295609191}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!136 &7040755554645481892
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9202963759023299679}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1.6
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.8, z: 0}

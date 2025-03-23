@@ -5,7 +5,6 @@ using UnityEngine;
 
 namespace Modules.DamageManager_Public
 {
-    // TODO: add reaction logioc to damageable component for NPCs
     public interface IDamageable : IDisposable
     {
         /// <summary>
@@ -43,7 +42,8 @@ namespace Modules.DamageManager_Public
 
         bool IsDead();
 
-        //bool ApplyStatusEffect(System.Object _source); // TODO: status effect category
+        float GetCurrentHealth();
+        float GetMaxHealth();
 
         event System.Action<bool> OnDamageApplied; 
     }
@@ -69,15 +69,8 @@ namespace Modules.DamageManager_Public
     // *****************************
     // DamageType
     // *****************************
-    // mb to config ?
     public enum DamageType
     {
-        Physical = 0,
-        Fire,
-        Water,
-        Earth,
-        Air,
-        Light,
-        Darkness
+        Physical = 0
     }
 }

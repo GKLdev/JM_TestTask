@@ -1,3 +1,4 @@
+using Modules.CharacterController_Public;
 using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
 using Modules.TimeManager_Public;
@@ -9,7 +10,7 @@ using Zenject;
 
 namespace Modules.DamageManager.DamageableCharacter
 {
-    public class DamageableCharacter : LogicBase, IDamageable
+    public class DamageableCharacter : LogicBase, IDamageable, IEntityModifcation
     {
         [SerializeField]
         State state;
@@ -159,6 +160,44 @@ namespace Modules.DamageManager.DamageableCharacter
         public bool IsDead()
         {
             return state.dynamic.isDead;
+        }
+
+        // *****************************
+        // ModifyEntity
+        // *****************************
+        public void ModifyEntity(EntityModifcationType _stat, float _value)
+        {
+            switch (_stat)
+            {
+                case EntityModifcationType.Health:
+                    bool atMaxHealth = state.dynamic.maxHealth == state.dynamic.health;
+                    state.dynamic.maxHealth = state.config.Health + _value;
+
+                    if (atMaxHealth)
+                    {
+                        state.dynamic.health = state.dynamic.maxHealth;
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        // *****************************
+        // GetCurrentHealth
+        // *****************************
+        public float GetCurrentHealth()
+        {
+            return state.dynamic.health;
+        }
+
+        // *****************************
+        // GetMaxHealth
+        // *****************************
+        public float GetMaxHealth()
+        {
+            return state.dynamic.maxHealth;
         }
     }
 

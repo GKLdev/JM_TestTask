@@ -81,6 +81,7 @@ namespace Modules.GameDirector
 
             result.MakePlayerControlled();
             result.P_Controller.Toggle(true);
+            result.P_StatsSystem.Toggle(true);
 
             return result;
         }

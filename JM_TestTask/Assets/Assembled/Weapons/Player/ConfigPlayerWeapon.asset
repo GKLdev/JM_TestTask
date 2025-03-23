@@ -9,12 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5673bd8d262a78242bdda703acc388db, type: 3}
-  m_Name: ConfigDamageable_AI
+  m_Script: {fileID: 11500000, guid: fd3baf0fe3a405341a4d883db6c9ae4f, type: 3}
+  m_Name: ConfigPlayerWeapon
   m_EditorClassIdentifier: 
-  id: 0
-  alias: 
-  subEntries: []
-  Health: 11
-  IsImmortalObject: 0
-  DamageableFaction: 1
+  targetLayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  maxDistance: 100
+  damage: 1
+  delayBetweenShots: 0.2
+  faction: 0
+  timeLayer: 2

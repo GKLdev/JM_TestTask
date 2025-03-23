@@ -7,16 +7,22 @@ using Modules.CharacterManager_Public;
 using Modules.CharacterFacade_Public;
 using Modules.CharacterController;
 using Modules.CharacterControllerView_Public;
+using Modules.PlayerProgression_Public;
+using Modules.ModuleManager_Public;
+using Modules.PlayerWeapon_Public;
 
 namespace Test.CharacterController
 {
     public class CharacterControllerTester : MonoBehaviour
     {
         [Inject]
-        ITimeManager timeMgr;
+        IModuleManager moduleMgr;
 
         [Inject]
         ICharacterManager characterMgr;
+
+        [Inject]
+        IPlayerProgression plrProgression;
 
         [SerializeField]
         private SerializedInterface<ICharacterFacade> characterController;
@@ -33,6 +39,7 @@ namespace Test.CharacterController
         private bool isNavmeshMode = false;  // Current navigation mode state
         private bool charManagerMode = false;
 
+        private IPlayerWeapon weapon;
 
         // *****************************
         // Start
@@ -55,7 +62,7 @@ namespace Test.CharacterController
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            //timeMgr.ToggleTimeEvaluation(true);
+            weapon = moduleMgr.Container.Resolve<IPlayerWeapon>();
         }
 
         // *****************************
@@ -79,7 +86,35 @@ namespace Test.CharacterController
             HandleLookInput();
             HandleNavigationModeToggle();
             HandleMoveToTarget();
+
+            HandleStatInput();
+            HandleWeaponInput();
         }
+
+        // *****************************
+        // HandleMovementInput
+        // *****************************
+        private void HandleStatInput()
+        {
+            if (Input.GetKeyDown("1"))
+            {
+                plrProgression.SetStatValue(10, PlayerProgressionAliases.speed);
+                plrProgression.SetStatValue(10, PlayerProgressionAliases.health);
+                plrProgression.SetStatValue(10, PlayerProgressionAliases.damage);
+            }
+        }
+
+        // *****************************
+        // HandleWeaponInput
+        // *****************************
+        private void HandleWeaponInput()
+        {
+            if (Input.GetButton("Fire1"))
+            {
+                weapon.Shoot();
+            }
+        }
+
 
         // *****************************
         // HandleMovementInput

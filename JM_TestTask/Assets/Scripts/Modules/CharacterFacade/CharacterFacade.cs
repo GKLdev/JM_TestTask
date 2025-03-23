@@ -17,17 +17,22 @@ namespace Modules.CharacterFacade
     /// <summary>
     /// Helps to init, update and to get access to all character components.
     /// </summary>
+
+    // TODO: add statmanager and ability to change it adn enable it.
     public class CharacterFacade : LogicBase, ICharacterFacade
     {
         public int Id { get; set; }
 
         public ICharacterController         P_Controller => controller.Value;
+        public ICharacterStatsSystem        P_StatsSystem => statsSystem.Value;
+
         public CATEGORY_CHARACTERS          P_ElementType { get; set; }
         public GameObject                   P_GameObjectAccess => gameObject;
 
         public SerializedInterface<ICharacterController>        controller;
         public SerializedInterface<IDamageable>                 damageable;
         public SerializedInterface<IAIBrain>                    aiBrain;
+        public SerializedInterface<ICharacterStatsSystem>       statsSystem;
 
         bool initialized    = false;
         bool isDisposed     = false;
@@ -49,6 +54,7 @@ namespace Modules.CharacterFacade
             damageable.Value.OnCreated();
             damageable.Value.OnDamageApplied += OnDamage;
             aiBrain.Value.InitModule(this);
+            statsSystem.Value.InitModule();
 
             initialized = true;
 
@@ -104,10 +110,11 @@ namespace Modules.CharacterFacade
             {
                 Debug.Log($"Character={this.name} is dead!");
                 // dead logic
+                // TODO: subscrive controller and view to OnDamage event
             }
             else {
                 // on damage logic
-                Debug.Log($"Character={this.name} is damaged!");
+                Debug.Log($"Character={this.name} is damaged! HP={damageable.Value.GetCurrentHealth()}/{damageable.Value.GetMaxHealth()}");
             }
         }
 
@@ -152,6 +159,7 @@ namespace Modules.CharacterFacade
             controller.Value.GetView().OnAwake();
             damageable.Value.ToggleActive(true);
             aiBrain.Value.OnAwake();
+            statsSystem.Value.OnAwake();
         }
 
         // *****************************
@@ -164,6 +172,7 @@ namespace Modules.CharacterFacade
             damageable.Value.ResetDamageable();
             damageable.Value.ToggleActive(false);
             aiBrain.Value.OnSlept();
+            statsSystem.Value.OnSlept();
         }
 
         // *****************************
@@ -174,6 +183,7 @@ namespace Modules.CharacterFacade
             controller.Value.OnAdded();
             controller.Value.GetView().OnAdded();
             aiBrain.Value.OnAdded();
+            statsSystem.Value.OnAdded();
         }
 
         // *****************************
@@ -191,6 +201,9 @@ namespace Modules.CharacterFacade
             controller.Value.Dispose();
             damageable.Value.Dispose();
             aiBrain.Value.Dispose();
+            statsSystem.Value.Dispose();
+
+            damageable.Value.OnDamageApplied -= OnDamage;
         }
     }
 }

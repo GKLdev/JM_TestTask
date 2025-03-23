@@ -88,6 +88,28 @@ namespace Modules.CharacterController
         {
             _state.dynamicData.movementData.Reset();
             _state.dynamicData.rotationData.Reset();
+            _state.dynamicData.modficationData.Reset();
+        }
+
+        // *****************************
+        // ApplyStateModifications
+        // *****************************
+        public static void ApplyStateModifications(State _state)
+        {
+            float strafeMaxSpeed    = _state.config.P_StrafeMaxSpeed;
+            float maxSpeed          = _state.config.P_MaxSpeed;
+            float modification      = _state.dynamicData.modficationData.speedMod;
+
+            _state.dynamicData.movementData.currentMaxSpeed         = maxSpeed + modification;
+            _state.dynamicData.movementData.currentMaxStrafeSpeed   = strafeMaxSpeed + modification;
+
+            _state.dynamicData.movementData.movementAxisZ.SetParam(IDynamicAxis.AxisParamType.Max, _state.dynamicData.movementData.currentMaxSpeed);
+            _state.dynamicData.movementData.movementAxisZ.SetParam(IDynamicAxis.AxisParamType.Min, -_state.dynamicData.movementData.currentMaxSpeed);
+
+            _state.dynamicData.movementData.movementAxisX.SetParam(IDynamicAxis.AxisParamType.Max, _state.dynamicData.movementData.currentMaxStrafeSpeed);
+            _state.dynamicData.movementData.movementAxisX.SetParam(IDynamicAxis.AxisParamType.Min, -_state.dynamicData.movementData.currentMaxStrafeSpeed);
+
+            _state.navAgent.speed = _state.dynamicData.movementData.currentMaxSpeed;
         }
     }
 }

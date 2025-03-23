@@ -2,6 +2,7 @@ using CharacterControllerView_Public;
 using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
+using Modules.CharacterFacade_Public;
 using Modules.ModuleManager_Public;
 using Modules.TimeManager_Public;
 using UnityEngine;
@@ -10,7 +11,7 @@ using Zenject;
 
 namespace Modules.CharacterController
 {
-    public class CharacterController : LogicBase, ICharacterController
+    public class CharacterController : LogicBase, ICharacterController, IEntityModifcation
     {
         public Vector3 P_Position { get => state.transform.position; set => state.transform.position = value; }
         public Quaternion P_Rotation { get => state.transform.rotation; set => state.transform.rotation = value; }
@@ -198,6 +199,23 @@ namespace Modules.CharacterController
 
             return state.dynamicData.generalData.view;
         }
+
+        // *****************************
+        // ModifyEntity
+        // *****************************
+        public void ModifyEntity(EntityModifcationType _stat, float _value)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+
+            switch (_stat)
+            {
+                case EntityModifcationType.Speed:
+                    state.dynamicData.modficationData.speedMod = _value;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     [System.Serializable]
@@ -212,14 +230,14 @@ namespace Modules.CharacterController
         public Transform viewRoot;
 
         public DynamicData dynamicData = new();
-        [System.Serializable]
+
         public class DynamicData
         {
             public GeneralData generalData = new();
             public MovementData movementData = new();
             public RotationData rotationData = new();
             public CollisionData collisionData = new();
-            [System.Serializable]
+            public ModificationData modficationData = new();
             public class GeneralData
             {
                 public bool                     isInitialized = false;
@@ -230,7 +248,7 @@ namespace Modules.CharacterController
                 public ICharacterControllerView view;
                 public IPlayerView              playerView;
             }
-            [System.Serializable]
+
             public class MovementData
             {
                 public IDynamicAxis movementAxisX;
@@ -243,6 +261,9 @@ namespace Modules.CharacterController
                 public Vector3 desiredPosition;
                 public Vector2 inputDirection = Vector2.zero;
                 public NavigationMode navigationMode = NavigationMode.DirectControl;
+
+                public float currentMaxSpeed;
+                public float currentMaxStrafeSpeed;
 
                 // Reset all movement data
                 public void Reset()
@@ -257,8 +278,11 @@ namespace Modules.CharacterController
                     desiredPosition = Vector3.zero;
                     inputDirection = Vector2.zero;
                     navigationMode = NavigationMode.DirectControl;
-                }
+                    currentMaxSpeed = 0f;
+                    currentMaxStrafeSpeed = 0f;
+
             }
+        }
 
             public class RotationData
             {
@@ -276,6 +300,17 @@ namespace Modules.CharacterController
                     relativeLookAngles = Vector2.zero;
                     hasRelativeLookAngles = false;
                     verticalLookAngle = 0f;
+                }
+            }
+
+            public class ModificationData
+            {
+                public float speedMod = 0f;
+
+                // Reset mods data
+                public void Reset()
+                {
+                    speedMod  = 0f;
                 }
             }
 

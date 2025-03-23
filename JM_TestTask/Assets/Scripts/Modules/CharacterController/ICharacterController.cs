@@ -66,9 +66,4 @@ namespace Modules.CharacterController_Public
         DirectControl = 0,
         Navmesh
     }
-
-    public class CharacterControllerException : System.Exception
-    {
-        public CharacterControllerException(string _message) : base(_message) { }
-    }
 }

@@ -88,7 +88,7 @@ namespace Modules.CharacterController_Public
         [SerializeField]
         private float groundCheckExtraDistance = 0.1f;
 
-        [Tooltip("Time layer used fo delta time calcuilation")]
+        [Tooltip("Time layer used fo delta time calculation")]
         [SerializeField]
         private TimeLayerType timeLayer = TimeLayerType.World;
 

@@ -15,6 +15,9 @@ namespace Modules.CharacterController
             // Update time delta
             GetDeltaTIme(_state);
 
+            // Apply modifications
+            CompInit.ApplyStateModifications(_state);
+
             // Update movement based on navigation mode
             if (_state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh)
             {

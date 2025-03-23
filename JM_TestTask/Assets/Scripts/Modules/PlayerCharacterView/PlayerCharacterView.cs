@@ -1,8 +1,10 @@
 using CharacterControllerView_Public;
+using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
 using Modules.ModuleManager_Public;
 using Modules.PlayerCharacterView_Public;
+using Modules.PlayerWeapon_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -112,7 +114,8 @@ namespace Modules.PlayerCharacterView
         public Transform root;
         public Transform head;
 
-        public ConfigPlayerCharacterView config;
+        public ConfigPlayerCharacterView            config;
+        public SerializedInterface<IPlayerWeapon>   debugWeapon;
 
         public DynamicData dynamicData = new();
 
