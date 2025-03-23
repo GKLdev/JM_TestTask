@@ -27,6 +27,9 @@ namespace Modules.CharacterController
 
             // Update rotation
             CompRotation.UpdateRotation(_state);
+
+            // Update View
+            _state.dynamicData.generalData.view.OnUpdate();
         }
 
         // *****************************

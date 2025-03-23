@@ -20,5 +20,5 @@ MonoBehaviour:
   AITemplate: {fileID: 0}
   CharacterFacade: {fileID: 1284513860685598400, guid: 9f47ce510cae1454c871e4d7c122541f,
     type: 3}
-  CharacterVisual: {fileID: 1077889485122580821, guid: 5a2d231a4e2bdee4da09f09959912759,
+  CharacterVisual: {fileID: 5904493736666645236, guid: d9152de150e26084f876ed2d5271cc63,
     type: 3}

@@ -3,6 +3,10 @@ using Modules.CharacterController_Public;
 using GDTUtils;
 using Zenject;
 using Modules.TimeManager_Public;
+using Modules.CharacterManager_Public;
+using Modules.CharacterFacade_Public;
+using Modules.CharacterController;
+using Modules.CharacterControllerView_Public;
 
 namespace Test.CharacterController
 {
@@ -11,8 +15,14 @@ namespace Test.CharacterController
         [Inject]
         ITimeManager timeMgr;
 
+        [Inject]
+        ICharacterManager characterMgr;
+
         [SerializeField]
-        private SerializedInterface<ICharacterController> characterController = new();
+        private SerializedInterface<ICharacterFacade> characterController;
+
+        [SerializeField]
+        private SerializedInterface<ICharacterControllerView> characterView;
 
         [SerializeField]
         private Transform targetTransform;  // Target for MoveToTarget
@@ -21,28 +31,31 @@ namespace Test.CharacterController
         private float mouseSensitivity = 2f;  // Mouse sensitivity for look direction
 
         private bool isNavmeshMode = false;  // Current navigation mode state
+        private bool charManagerMode = false;
+
 
         // *****************************
         // Start
         // *****************************
         private void Start()
         {
-            // Initialize the character controller module
-            if (characterController.Value != null)
+            if (characterController.Value == null)
             {
-                characterController.Value.InitModule();
-                characterController.Value.Toggle(true);
+                characterController.Value = characterMgr.GetPlayer();
+                charManagerMode = true;
             }
             else
             {
-                Debug.LogError("CharacterController is not assigned in the inspector.");
+                characterController.Value.InitModule(characterView.Value);
+                characterController.Value.P_Controller.InitModule();
+                characterController.Value.P_Controller.Toggle(true);
             }
 
             // Lock cursor for mouse look
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
 
-            timeMgr.ToggleTimeEvaluation(true);
+            //timeMgr.ToggleTimeEvaluation(true);
         }
 
         // *****************************
@@ -56,7 +69,10 @@ namespace Test.CharacterController
             }
 
             // Update the character controller module
-            characterController.Value.OnUpdate();
+            if (!charManagerMode)
+            {
+                characterController.Value.OnUpdate();
+            }
 
             // Handle keyboard and mouse input
             HandleMovementInput();
@@ -76,7 +92,7 @@ namespace Test.CharacterController
             Vector2 movementInput = new Vector2(horizontalInput, verticalInput).normalized;
 
             // Send movement input to the character controller
-            characterController.Value.Move(movementInput);
+            characterController.Value.P_Controller.Move(movementInput);
         }
 
         // *****************************
@@ -90,7 +106,7 @@ namespace Test.CharacterController
 
             // Calculate relative look direction based on mouse input
             Vector2 relativeLookDir = new Vector2(mouseX, -mouseY);
-            characterController.Value.LookDirectionRelative(relativeLookDir);
+            characterController.Value.P_Controller.LookDirectionRelative(relativeLookDir);
         }
 
         // *****************************
@@ -103,7 +119,7 @@ namespace Test.CharacterController
             {
                 isNavmeshMode = !isNavmeshMode;
                 NavigationMode newMode = isNavmeshMode ? NavigationMode.Navmesh : NavigationMode.DirectControl;
-                characterController.Value.SetNavigationMode(newMode);
+                characterController.Value.P_Controller.SetNavigationMode(newMode);
                 Debug.Log($"Navigation mode switched to: {newMode}");
             }
         }
@@ -116,7 +132,7 @@ namespace Test.CharacterController
             // Set target position with a key (e.g., T key)
             if (Input.GetKeyDown(KeyCode.T) && targetTransform != null)
             {
-                characterController.Value.MoveToTarget(targetTransform.position);
+                characterController.Value.P_Controller.MoveToTarget(targetTransform.position);
                 Debug.Log($"Moving to target at position: {targetTransform.position}");
             }
         }

@@ -1,3 +1,4 @@
+using CharacterControllerView_Public;
 using GDTUtils;
 using Modules.TimeManager_Public;
 using System.Collections;
@@ -26,13 +27,6 @@ namespace Modules.CharacterController
             if (_state.transform == null)
             {
                 Debug.Assert(false, "Transform component is missing on the GameObject.");
-                return;
-            }
-
-            // Validate vertical look transform
-            if (_state.verticalLookTransform == null)
-            {
-                Debug.Assert(false, "Vertical look transform is not assigned.");
                 return;
             }
 

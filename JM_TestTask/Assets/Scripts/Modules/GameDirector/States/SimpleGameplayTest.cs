@@ -2,6 +2,7 @@ using GDTUtils;
 using Modules.CharacterFacade_Public;
 using Modules.CharacterManager_Public;
 using Modules.ReferenceDb_Public;
+using Modules.TimeManager_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,8 +14,8 @@ namespace Modules.GameDirector
 {
     public class SimpleGameplayTest : GDTUtils.StateMachine.StateMachineNodeBase<GameDirectorNodeType, State>
     {
-        [Inject]
-        ICharacterManager characterMgr;
+        ICharacterManager   characterMgr;
+        ITimeManager        timeMgr;
 
         List<ICharacterFacade> characters = new();
 
@@ -28,11 +29,13 @@ namespace Modules.GameDirector
             Debug.Log("Starting game...");
 
             characterMgr = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ICharacterManager>();
+            timeMgr = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ITimeManager>();
+
+            timeMgr.ToggleTimeEvaluation(true);
 
             // spawn ai characters:
 
-            characterMgr.CreateCharacter(CATEGORY_CHARACTERS.Character_Player);
-
+            var player = SpawnPlayer(Vector3.zero, Vector3.forward);
 
             for (int i = 0; i < 10; i++) 
             {
@@ -62,6 +65,22 @@ namespace Modules.GameDirector
             result.MakeAIControlled();
             result.P_Controller.Toggle(true);
 
+
+            return result;
+        }
+
+        // *****************************
+        // ICharacterFacade
+        // *****************************
+        private ICharacterFacade SpawnPlayer(Vector3 _pos, Vector3 _orientation)
+        {
+            ICharacterFacade result = characterMgr.CreateCharacter(CATEGORY_CHARACTERS.Character_Player);
+
+            result.P_GameObjectAccess.transform.position = _pos;
+            result.P_GameObjectAccess.transform.forward = _orientation;
+
+            result.MakePlayerControlled();
+            result.P_Controller.Toggle(true);
 
             return result;
         }

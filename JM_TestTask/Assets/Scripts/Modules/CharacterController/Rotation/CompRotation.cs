@@ -1,3 +1,4 @@
+using CharacterControllerView_Public;
 using Modules.CharacterController_Public;
 using UnityEngine;
 
@@ -48,17 +49,12 @@ namespace Modules.CharacterController
 
             // Apply rotation
             _state.transform.rotation *= Quaternion.Euler(0f, _state.dynamicData.rotationData.relativeLookAngles.x, 0f);
-            _state.verticalLookTransform.rotation *= Quaternion.Euler(_state.dynamicData.rotationData.relativeLookAngles.y, 0f, 0f);
 
-            // Clamp vertical rotation
-            Vector3 newFwd = _state.verticalLookTransform.forward;
-            float maxAngle = _state.config.P_MaxVerticalLookAngle;
-
-            float angle = Vector3.SignedAngle(newFwd, _state.transform.forward, _state.transform.right);
-            bool needClamp = Mathf.Abs(angle) > maxAngle;
-            if (needClamp)
+            // Head rotation
+            bool isPlayer = _state.dynamicData.generalData.playerView != null;
+            if (isPlayer)
             {
-                _state.verticalLookTransform.rotation = _state.transform.rotation * Quaternion.Euler(-Mathf.Sign(angle) * maxAngle, 0f, 0f);
+                _state.dynamicData.generalData.playerView.SetHeadAngles(new Vector2(0f, _state.dynamicData.rotationData.relativeLookAngles.y));
             }
         }
 

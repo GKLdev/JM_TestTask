@@ -2,6 +2,7 @@ using Modules.CharacterControllerView_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 namespace Modules.CharacterControllerView
 {
     public static class CompInit
@@ -12,10 +13,19 @@ namespace Modules.CharacterControllerView
         public static void Init(State _state)
         {
             // Check that all state roots are assigned
-            UnityEngine.Debug.Assert(_state.StateRoots != null, _state.AssertMsgStateRootsNullValue);
+            if (_state.StateRoots == null)
+            {
+                Debug.Assert(false, "StateRoots array is not assigned in CharacterControllerView.");
+                return;
+            }
+
             for (int i = 0; i < _state.StateRoots.Length; i++)
             {
-                UnityEngine.Debug.Assert(_state.StateRoots[i] != null, string.Format(_state.AssertMsgStateRootNullValue, i));
+                if (_state.StateRoots[i] == null)
+                {
+                    Debug.Assert(false, $"State root at index {i} is not assigned in CharacterControllerView.");
+                    return;
+                }
             }
 
             // Reset dynamic state

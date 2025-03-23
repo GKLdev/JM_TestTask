@@ -1,14 +1,16 @@
+using CharacterControllerView_Public;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
 using Modules.ModuleManager_Public;
+using Modules.PlayerCharacterView_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-namespace Modules.CharacterControllerView
+namespace Modules.PlayerCharacterView
 {
-    public class CharacterControllerView : LogicBase, ICharacterControllerView
+    public class PlayerCharacterView : LogicBase, ICharacterControllerView, IPlayerView
     {
         public GameObject P_GameObjectAccess => state.root.gameObject;
 
@@ -44,7 +46,6 @@ namespace Modules.CharacterControllerView
         // *****************************
         public void SetVisualState(VisualState _type)
         {
-            CompVisualState.SetVisualState(state, _type);
         }
 
         // *****************************
@@ -98,9 +99,10 @@ namespace Modules.CharacterControllerView
         // *****************************
         // SetHeadAngle
         // *****************************
-        public void SetHeadAngle(float _angle)
+        public void SetHeadAngles(Vector2 _angles)
         {
-            throw new System.NotImplementedException();
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            state.dynamicData.headRelativeRotation = _angles;
         }
     }
 
@@ -108,10 +110,9 @@ namespace Modules.CharacterControllerView
     public class State
     {
         public Transform root;
+        public Transform head;
 
-        // Array of state roots, indexed by VisualState enum (Idle = 0, Dead = 1)
-        [SerializeField]
-        private UnityEngine.GameObject[] stateRoots;
+        public ConfigPlayerCharacterView config;
 
         public DynamicData dynamicData = new();
 
@@ -119,18 +120,14 @@ namespace Modules.CharacterControllerView
         {
             public bool isInitialized = false;
 
-            // Current visual state
-            public VisualState          currentState        = VisualState.Idle;
-            public ICharacterController characterController = null;
+            public ICharacterController characterController     = null;
+            public Vector2              headRelativeRotation    = Vector2.zero;
 
             public void Reset()
             {
                 characterController = null;
-                currentState        = VisualState.Idle;
+                headRelativeRotation = Vector2.zero;
             }
         }
-
-        // Getter for accessing state roots array
-        public UnityEngine.GameObject[] StateRoots => stateRoots;
     }
 }

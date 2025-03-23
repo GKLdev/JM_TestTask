@@ -1,3 +1,4 @@
+using CharacterControllerView_Public;
 using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
@@ -170,6 +171,9 @@ namespace Modules.CharacterController
 
             state.dynamicData.generalData.view = _view;
             state.dynamicData.generalData.view.InitModule();
+
+            // Try get PlayerView
+            state.dynamicData.generalData.playerView = state.dynamicData.generalData.view as IPlayerView;
         }
 
         // *****************************
@@ -199,29 +203,23 @@ namespace Modules.CharacterController
     [System.Serializable]
     public class State
     {
-        public Transform transform;
+        public Transform    transform;    
+        public Collider     characterCollider;
         
-        [SerializeField]
-        public Transform verticalLookTransform;
-        
-        [SerializeField]
-        public Collider characterCollider;
-        
-        [SerializeField]
         public ConfigCharacterController config;
         public NavMeshAgent navAgent;
 
         public Transform viewRoot;
 
         public DynamicData dynamicData = new();
-
+        [System.Serializable]
         public class DynamicData
         {
             public GeneralData generalData = new();
             public MovementData movementData = new();
             public RotationData rotationData = new();
             public CollisionData collisionData = new();
-
+            [System.Serializable]
             public class GeneralData
             {
                 public bool                     isInitialized = false;
@@ -230,8 +228,9 @@ namespace Modules.CharacterController
                 public ITimeManager             timeMgr;
                 public float                    deltaTime;
                 public ICharacterControllerView view;
+                public IPlayerView              playerView;
             }
-
+            [System.Serializable]
             public class MovementData
             {
                 public IDynamicAxis movementAxisX;

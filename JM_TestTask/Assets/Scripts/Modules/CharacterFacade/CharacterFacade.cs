@@ -116,7 +116,7 @@ namespace Modules.CharacterFacade
         // *****************************
         public void MakeAIControlled()
         {
-            P_Controller.MoveToTarget(P_Controller.P_Position); // sets controller to path mode and ensured it will not move anywhere
+            P_Controller.MoveToTarget(P_Controller.P_Position);
             aiBrain.Value.ToggleAIBrain(true);
             P_Controller.SetNavigationMode(NavigationMode.Navmesh);
         }
