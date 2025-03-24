@@ -15,6 +15,9 @@ MonoBehaviour:
   id: 0
   alias: 
   subEntries: []
-  Health: 11
+  Health: 10
+  NeedRandomizeHealth: 1
+  HealthRandomizationMin: 1
+  HealthRandomizationMax: 10
   IsImmortalObject: 0
   DamageableFaction: 1

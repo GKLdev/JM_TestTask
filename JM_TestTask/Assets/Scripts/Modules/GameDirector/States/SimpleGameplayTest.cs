@@ -20,8 +20,6 @@ namespace Modules.GameDirector
         ITimeManager        timeMgr;
         IPlayerProgression  progression;
 
-        List<ICharacterFacade> characters = new();
-
         // *****************************
         // OnStart
         // *****************************
@@ -105,6 +103,10 @@ namespace Modules.GameDirector
 
             Debug.Log("Adding progression point");
             progression.AddUpgradePoints(1);
+            _damageable.OnDamageApplied -= OnAIDamaged;
+
+            int rng = GDTRandom.generalRng.Next(1, 10);
+            SpawnAI(new Vector3(0 + rng, 0f, 0f), Vector3.forward);
         }
     }
 }

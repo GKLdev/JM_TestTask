@@ -72,7 +72,6 @@ namespace Modules.CharacterControllerView
             if (needSetActive)
             {
                 gameObject.SetActive(true);
-                SetVisualState(VisualState.Idle);
             }
         }
 
@@ -81,13 +80,14 @@ namespace Modules.CharacterControllerView
         // *****************************
         public void OnSlept()
         {
-            state.dynamicData.Reset();
-
             bool needSetInnactive = gameObject.activeInHierarchy;
             if (needSetInnactive)
             {
                 gameObject.SetActive(false);
             }
+
+            SetVisualState(VisualState.Idle);
+            state.dynamicData.Reset();
         }
 
         // *****************************

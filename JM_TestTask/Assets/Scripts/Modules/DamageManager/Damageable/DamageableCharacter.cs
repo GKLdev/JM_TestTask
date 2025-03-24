@@ -1,3 +1,4 @@
+using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
@@ -120,6 +121,9 @@ namespace Modules.DamageManager.DamageableCharacter
             state.dynamic.health            = state.config.Health;
             state.dynamic.maxHealth         = state.config.Health;
             state.dynamic.isImmortalObject  = state.config.IsImmortalObject;
+            state.dynamic.isDead            = false;
+
+            RandomizeHealth();
         }
 
         // *****************************
@@ -198,6 +202,26 @@ namespace Modules.DamageManager.DamageableCharacter
         public float GetMaxHealth()
         {
             return state.dynamic.maxHealth;
+        }
+
+        // *****************************
+        // RandomizeHealth
+        // *****************************
+        private void RandomizeHealth()
+        {
+            int min = state.config.HealthRandomizationMin;
+            int max = state.config.HealthRandomizationMax;
+
+            bool ignore = !state.config.NeedRandomizeHealth || min < 1 || max < min;
+            if (ignore)
+            {
+                return;
+            }
+
+            int value = GDTRandom.generalRng.Next(min, max);
+
+            state.dynamic.health    = value;
+            state.dynamic.maxHealth = value;
         }
     }
 
