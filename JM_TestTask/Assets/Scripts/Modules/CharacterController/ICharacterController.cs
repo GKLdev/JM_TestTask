@@ -13,7 +13,8 @@ namespace Modules.CharacterController_Public
         IModuleUpdate, 
         ITransformData, 
         IDisposable,
-        ICharacterFacadeCallbacks
+        ICharacterFacadeCallbacks,
+        ILifeState
     {
         /// <summary>
         /// Sets the movement direction for the character.

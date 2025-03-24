@@ -1,5 +1,6 @@
 using CharacterControllerView_Public;
 using GDTUtils;
+using Modules.CharacterManager_Public;
 using Modules.TimeManager_Public;
 using System.Collections;
 using System.Collections.Generic;
@@ -37,8 +38,16 @@ namespace Modules.CharacterController
                 return;
             }
 
+            // Validate character facde
+            if (_state.facade.Value == null)
+            {
+                Debug.Assert(false, "Character facade is not assigned.");
+                return;
+            }
+
             // Init dependencies
-            _state.dynamicData.generalData.timeMgr = _container.Resolve<ITimeManager>();
+            _state.dynamicData.generalData.timeMgr      = _container.Resolve<ITimeManager>();
+            _state.dynamicData.generalData.characterMgr = _container.Resolve<ICharacterManager>();
 
             // Setup time layer
             _state.dynamicData.generalData.timeLayer = _state.config.P_TimeLayer;

@@ -18,7 +18,7 @@ namespace Modules.DamageManager.DamageableCharacter
         [Inject]
         IModuleManager moduleMgr;
 
-        public event Action<bool> OnDamageApplied;
+        public event Action<bool, IDamageable> OnDamageApplied;
 
 
         // *****************************
@@ -107,7 +107,7 @@ namespace Modules.DamageManager.DamageableCharacter
             }
 
             state.dynamic.isDead = isDead;
-            OnDamageApplied?.Invoke(isDead);
+            OnDamageApplied?.Invoke(isDead, this);
 
             return result;
         }

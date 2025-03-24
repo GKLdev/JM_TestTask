@@ -21,6 +21,7 @@ namespace Modules.CharacterFacade_Public
     {
         ICharacterController        P_Controller { get; }
         ICharacterStatsSystem       P_StatsSystem { get; }
+        IDamageable                 P_Damageable { get; }
         void SetupCharacter(ConfigCharacterController _configController, ConfigDamageable _configDamageable, IAITemplate _template = null);
         void InitModule(ICharacterControllerView _visual);
         DamageSource GetDamageSource();     

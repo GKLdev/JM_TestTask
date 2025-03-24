@@ -1,6 +1,8 @@
 using GDTUtils;
 using Modules.CharacterFacade_Public;
 using Modules.CharacterManager_Public;
+using Modules.DamageManager_Public;
+using Modules.PlayerProgression_Public;
 using Modules.ReferenceDb_Public;
 using Modules.TimeManager_Public;
 using System.Collections;
@@ -16,6 +18,7 @@ namespace Modules.GameDirector
     {
         ICharacterManager   characterMgr;
         ITimeManager        timeMgr;
+        IPlayerProgression  progression;
 
         List<ICharacterFacade> characters = new();
 
@@ -28,20 +31,23 @@ namespace Modules.GameDirector
 
             Debug.Log("Starting game...");
 
-            characterMgr = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ICharacterManager>();
-            timeMgr = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ITimeManager>();
+            characterMgr    = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ICharacterManager>();
+            timeMgr         = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ITimeManager>();
+            progression     = stateMachine.P_ExternalReference.dynamicData.container.Resolve<IPlayerProgression>();
 
-            timeMgr.ToggleTimeEvaluation(true);
-
-            // spawn ai characters:
-
+            // Spawn player
             var player = SpawnPlayer(Vector3.zero, Vector3.forward);
 
+            // Spawn ai characters
             for (int i = 0; i < 10; i++) 
             {
                 int rng = GDTRandom.generalRng.Next(1, 10);
                 SpawnAI(new Vector3(0 + rng, 0f, 0f), Vector3.forward);
             }
+
+            // Prepare game systems
+            timeMgr.ToggleTimeEvaluation(true);
+            progression.ResetUpgradePoints();
         }
 
         // *****************************
@@ -64,7 +70,7 @@ namespace Modules.GameDirector
 
             result.MakeAIControlled();
             result.P_Controller.Toggle(true);
-
+            result.P_Damageable.OnDamageApplied += OnAIDamaged;
 
             return result;
         }
@@ -84,6 +90,21 @@ namespace Modules.GameDirector
             result.P_StatsSystem.Toggle(true);
 
             return result;
+        }
+
+        // *****************************
+        // OnAIDamaged
+        // *****************************
+        private void OnAIDamaged(bool _isDead, IDamageable _damageable)
+        {
+            bool ignore = !_isDead;
+            if (ignore)
+            {
+                return;
+            }
+
+            Debug.Log("Adding progression point");
+            progression.AddUpgradePoints(1);
         }
     }
 }

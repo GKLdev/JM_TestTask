@@ -35,7 +35,7 @@ namespace Modules.DamageManager.DamageableVisualizer
         // *****************************
         // OnDamage
         // *****************************
-        public void OnDamage(bool _isDead)
+        public void OnDamage(bool _isDead, IDamageable _damagable)
         {
             IdleState.SetActive(!_isDead);
             DestroyedState.SetActive(_isDead);

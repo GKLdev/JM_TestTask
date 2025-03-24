@@ -14,17 +14,13 @@ using UnityEngine;
 
 namespace Modules.CharacterFacade
 {
-    /// <summary>
-    /// Helps to init, update and to get access to all character components.
-    /// </summary>
-
-    // TODO: add statmanager and ability to change it adn enable it.
     public class CharacterFacade : LogicBase, ICharacterFacade
     {
         public int Id { get; set; }
 
         public ICharacterController         P_Controller => controller.Value;
         public ICharacterStatsSystem        P_StatsSystem => statsSystem.Value;
+        public IDamageable                  P_Damageable => damageable.Value;
 
         public CATEGORY_CHARACTERS          P_ElementType { get; set; }
         public GameObject                   P_GameObjectAccess => gameObject;
@@ -103,18 +99,17 @@ namespace Modules.CharacterFacade
         // *****************************
         // OnDamage 
         // *****************************
-        void OnDamage(bool _isDead) {
+        void OnDamage(bool _isDead, IDamageable _damageable) {
             
             // TODO
             if (_isDead)
             {
                 Debug.Log($"Character={this.name} is dead!");
-                // dead logic
-                // TODO: subscrive controller and view to OnDamage event
+                P_Controller.OnDeath();
             }
             else {
-                // on damage logic
-                Debug.Log($"Character={this.name} is damaged! HP={damageable.Value.GetCurrentHealth()}/{damageable.Value.GetMaxHealth()}");
+                Debug.Log($"Character={this.name} is damaged! HP={_damageable.GetCurrentHealth()}/{_damageable.GetMaxHealth()}");
+                P_Controller.OnDamage( _damageable );
             }
         }
 

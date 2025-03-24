@@ -51,6 +51,53 @@ namespace Modules.PlayerProgression
         {
             OnPlayerStatChanged?.Invoke(new StatChangeData() { alias = _alias , currentValue = _value });
         }
+
+        // *****************************
+        // RaiseStatChangedEvent
+        // *****************************
+        public void AddUpgradePoints(int _val)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            state.dynamicData.totalUpgradePoints += _val;
+            state.dynamicData.spareUpgradePoints += _val;
+        }
+
+        // *****************************
+        // RaiseStatChangedEvent
+        // *****************************
+        public int GetAvailableUpgradePointsCount()
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            return state.dynamicData.spareUpgradePoints;
+        }
+
+        // *****************************
+        // SpendUpgradePoints
+        // *****************************
+        public void SpendUpgradePoints(int _val, string _alias)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            CompStatManagement.SpendUpgradePoints(state, _val, _alias, this);
+        }
+
+        // *****************************
+        // RefundUpgradePoints
+        // *****************************
+        public void RefundUpgradePoints(int _val, string _alias)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            CompStatManagement.RefundUpgradePoints(state, _val , _alias , this);
+        }
+
+        // *****************************
+        // ResetUpgradePoints
+        // *****************************
+        public void ResetUpgradePoints()
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            state.dynamicData.totalUpgradePoints = 0;
+            state.dynamicData.spareUpgradePoints = 0;
+        }
     }
 
     [System.Serializable]
@@ -64,6 +111,9 @@ namespace Modules.PlayerProgression
         {
             public bool isInitialized = false;
             public Dictionary<string, PlayerStatContainer> stats = new();
+
+            public int totalUpgradePoints;
+            public int spareUpgradePoints;
 
             public void Reset()
             {

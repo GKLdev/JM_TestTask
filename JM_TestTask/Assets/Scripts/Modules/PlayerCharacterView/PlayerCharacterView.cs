@@ -2,6 +2,7 @@ using CharacterControllerView_Public;
 using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
+using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
 using Modules.PlayerCharacterView_Public;
 using Modules.PlayerWeapon_Public;
@@ -105,6 +106,20 @@ namespace Modules.PlayerCharacterView
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
             state.dynamicData.headRelativeRotation = _angles;
+        }
+
+        // *****************************
+        // OnDeath
+        // *****************************
+        public void OnDeath()
+        {
+        }
+
+        // *****************************
+        // OnDamage
+        // *****************************
+        public void OnDamage(IDamageable _damageable)
+        {
         }
     }
 

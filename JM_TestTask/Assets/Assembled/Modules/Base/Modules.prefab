@@ -57,10 +57,10 @@ MonoBehaviour:
     bindName: Modules.CharacterManager_Public.ICharacterManager
   - instance: {fileID: 474179416278329518}
     bindName: Modules.UI.UIController_Public.IUIController
-  - instance: {fileID: 4186388568379564368}
-    bindName: Modules.GameDirector_Public.IGameDirector
   - instance: {fileID: 2810235596856222673}
     bindName: Modules.PlayerProgression_Public.IPlayerProgression
+  - instance: {fileID: 4186388568379564368}
+    bindName: Modules.GameDirector_Public.IGameDirector
 --- !u!1 &1337719674602237115
 GameObject:
   m_ObjectHideFlags: 0

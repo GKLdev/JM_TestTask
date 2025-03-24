@@ -45,7 +45,7 @@ namespace Modules.DamageManager_Public
         float GetCurrentHealth();
         float GetMaxHealth();
 
-        event System.Action<bool> OnDamageApplied; 
+        event System.Action<bool, IDamageable> OnDamageApplied; 
     }
 
     // *****************************

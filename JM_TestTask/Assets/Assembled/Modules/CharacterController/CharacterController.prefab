@@ -80,6 +80,8 @@ MonoBehaviour:
     config: {fileID: 11400000, guid: 1315ce8e9244e39448e53d2654afcfc8, type: 2}
     navAgent: {fileID: 5315622419344743280}
     viewRoot: {fileID: 744183032751996502}
+    facade:
+      <Field>k__BackingField: {fileID: 1284513860685598400}
 --- !u!136 &8449714817210300121
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -198,6 +200,8 @@ MonoBehaviour:
       <Field>k__BackingField: {fileID: 4892011881632774652}
     damageable:
       <Field>k__BackingField: {fileID: 1789213114917140642}
+    weapon:
+      <Field>k__BackingField: {fileID: 0}
 --- !u!1 &2387372281945926067
 GameObject:
   m_ObjectHideFlags: 0

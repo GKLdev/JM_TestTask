@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Modules.CharacterControllerView_Public
 {
-    public interface ICharacterControllerView : IModuleInit, IModuleUpdate, ICharacterFacadeCallbacks, IGameObjectAccess
+    public interface ICharacterControllerView : IModuleInit, IModuleUpdate, ICharacterFacadeCallbacks, IGameObjectAccess, ILifeState
     {
         /// <summary>
         /// Sets the visual state of the character (e.g., Idle or Dead).

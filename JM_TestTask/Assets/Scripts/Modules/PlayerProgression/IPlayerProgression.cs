@@ -17,6 +17,30 @@ namespace Modules.PlayerProgression_Public
         /// </summary>
         int GetStatValue(string _alias);
 
+        /// <summary>
+        /// Adds points which can be traded for upgrades.
+        /// </summary>
+        void AddUpgradePoints(int _val);
+
+        /// <summary>
+        /// Returns count of free upgrade points.
+        /// </summary>
+        int GetAvailableUpgradePointsCount();
+
+        /// <summary>
+        /// Use upgrade points to increase given stat.
+        /// </summary>
+        void SpendUpgradePoints(int _val, string _alias);
+
+        /// <summary>
+        /// Get upgrade points back from given stat.
+        /// </summary>
+        void RefundUpgradePoints(int _val, string _alias);
+
+        /// <summary>
+        /// Resets upgrade points data. But not modifications data!
+        /// </summary>
+        void ResetUpgradePoints();
 
         /// <summary>
         /// Gets Called after any stat was changed

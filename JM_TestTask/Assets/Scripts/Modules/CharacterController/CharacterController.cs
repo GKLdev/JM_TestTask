@@ -3,6 +3,8 @@ using GDTUtils;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
 using Modules.CharacterFacade_Public;
+using Modules.CharacterManager_Public;
+using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
 using Modules.TimeManager_Public;
 using UnityEngine;
@@ -216,6 +218,29 @@ namespace Modules.CharacterController
                     break;
             }
         }
+
+        // *****************************
+        // OnDeath
+        // *****************************
+        public void OnDeath()
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+            SetNavigationMode(NavigationMode.DirectControl);
+            Toggle(false);
+            state.dynamicData.generalData.view.OnDeath();
+
+            // may be caled after some delay to player death anim beforehand.
+            state.dynamicData.generalData.characterMgr.RemoveCharacter(state.facade.Value);
+        }
+
+        // *****************************
+        // OnDamage
+        // *****************************
+        public void OnDamage(IDamageable _damageable)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
+            state.dynamicData.generalData.view.OnDamage(_damageable);
+        }
     }
 
     [System.Serializable]
@@ -228,6 +253,8 @@ namespace Modules.CharacterController
         public NavMeshAgent navAgent;
 
         public Transform viewRoot;
+
+        public SerializedInterface<ICharacterFacade> facade;
 
         public DynamicData dynamicData = new();
 
@@ -244,6 +271,7 @@ namespace Modules.CharacterController
                 public bool                     isEnabled = false;
                 public TimeLayerType            timeLayer;
                 public ITimeManager             timeMgr;
+                public ICharacterManager        characterMgr;
                 public float                    deltaTime;
                 public ICharacterControllerView view;
                 public IPlayerView              playerView;

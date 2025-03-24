@@ -1,5 +1,6 @@
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
+using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,6 +72,7 @@ namespace Modules.CharacterControllerView
             if (needSetActive)
             {
                 gameObject.SetActive(true);
+                SetVisualState(VisualState.Idle);
             }
         }
 
@@ -101,6 +103,23 @@ namespace Modules.CharacterControllerView
         public void SetHeadAngle(float _angle)
         {
             throw new System.NotImplementedException();
+        }
+
+        // *****************************
+        // OnDeath
+        // *****************************
+        public void OnDeath()
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            SetVisualState(VisualState.Dead);
+        }
+
+        // *****************************
+        // OnDamage
+        // *****************************
+        public void OnDamage(IDamageable _damageable)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
         }
     }
 
