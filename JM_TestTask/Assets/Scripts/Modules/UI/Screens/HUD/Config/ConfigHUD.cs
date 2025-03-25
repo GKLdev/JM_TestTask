@@ -8,6 +8,5 @@ namespace Modules.UI.Screens.HUD
     [CreateAssetMenu(menuName = "Configs/UI/Screens/HUD", fileName = "ConfigHUD")]
     public class ConfigHUD : DbEntryBase
     {
-        public Sprite IconPickupItem;
     }
 }

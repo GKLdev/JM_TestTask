@@ -1,14 +1,20 @@
 using GDTUtils;
+using Modules.CharacterController;
+using Modules.CharacterController_Public;
 using Modules.CharacterFacade_Public;
 using Modules.CharacterManager_Public;
 using Modules.DamageManager_Public;
+using Modules.InputManager_Public;
 using Modules.PlayerProgression_Public;
+using Modules.PlayerWeapon_Public;
 using Modules.ReferenceDb_Public;
 using Modules.TimeManager_Public;
+using Modules.UI.UIController_Public;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using UnityEngine.Windows;
 using Zenject;
 using static UnityEngine.GraphicsBuffer;
 
@@ -19,6 +25,10 @@ namespace Modules.GameDirector
         ICharacterManager   characterMgr;
         ITimeManager        timeMgr;
         IPlayerProgression  progression;
+        IUIController       ui;
+        IInputManager       input;
+
+        ICharacterFacade player;
 
         // *****************************
         // OnStart
@@ -32,9 +42,11 @@ namespace Modules.GameDirector
             characterMgr    = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ICharacterManager>();
             timeMgr         = stateMachine.P_ExternalReference.dynamicData.container.Resolve<ITimeManager>();
             progression     = stateMachine.P_ExternalReference.dynamicData.container.Resolve<IPlayerProgression>();
+            ui              = stateMachine.P_ExternalReference.dynamicData.container.Resolve<IUIController>();
+            input           = stateMachine.P_ExternalReference.dynamicData.container.Resolve<IInputManager>();
 
             // Spawn player
-            var player = SpawnPlayer(Vector3.zero, Vector3.forward);
+            player          = SpawnPlayer(Vector3.zero, Vector3.forward);
 
             // Spawn ai characters
             for (int i = 0; i < 10; i++) 
@@ -46,14 +58,8 @@ namespace Modules.GameDirector
             // Prepare game systems
             timeMgr.ToggleTimeEvaluation(true);
             progression.ResetUpgradePoints();
-        }
-
-        // *****************************
-        // OnUpdate
-        // *****************************
-        protected override void OnUpdate()
-        {
-            base.OnUpdate();
+            ui.ShowScreen(ScreenType.HUD, true);
+            input.SetContext(InputContext.World);
         }
 
         // *****************************
@@ -101,7 +107,6 @@ namespace Modules.GameDirector
                 return;
             }
 
-            Debug.Log("Adding progression point");
             progression.AddUpgradePoints(1);
             _damageable.OnDamageApplied -= OnAIDamaged;
 

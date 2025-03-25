@@ -7,6 +7,7 @@ namespace Modules.UI.Screens.HUD_Public
 {
     public interface IUIScreenViewHUD : IScreenView
     {
-        void ToggleHint(bool _show, Sprite _image = null, string _text = null);
+        void SetUpgradesAvailable(int _count);
+        void UpdaterHPBar(int _current, int _max);
     }
 }

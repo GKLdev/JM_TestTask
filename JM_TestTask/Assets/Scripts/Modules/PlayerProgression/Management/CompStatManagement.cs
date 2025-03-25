@@ -102,5 +102,26 @@ namespace Modules.PlayerProgression
             SetStatValue(_state, currentStatValue - refundPoints, _alias, _self);
             _state.dynamicData.spareUpgradePoints += refundPoints;
         }
+
+
+        // *****************************
+        // GetStatLimits
+        // *****************************
+        public static void GetStatLimits(State _state, string _alias, out int _min, out int _max)
+        {
+            _min = 0;
+            _max = 0;
+
+            // Check if the stat already exists
+            bool statExists = _state.dynamicData.stats.ContainsKey(_alias);
+            if (!statExists)
+            {
+                Debug.Assert(false, $"Stat with alias {_alias} not found");
+                return;
+            }
+
+            _min = _state.dynamicData.stats[_alias].min;
+            _max = _state.dynamicData.stats[_alias].max;
+        }
     }
 }

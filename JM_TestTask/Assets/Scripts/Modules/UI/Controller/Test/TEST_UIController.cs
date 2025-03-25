@@ -51,14 +51,11 @@ namespace Tests
                     //moduleManager.Container.Inject(this);
                     Type type = typeof(Dependencies);
                     dependencies = moduleManager.Container.Instantiate(type) as Dependencies;
-                }
-                
-                dependencies.hud.ShowHint(true, HUDHintType.ItemPickup);
+                }   
             }
 
             if (Input.GetKeyDown("u"))
             {
-                dependencies.hud.ShowHint(false);
             }
         }
                 

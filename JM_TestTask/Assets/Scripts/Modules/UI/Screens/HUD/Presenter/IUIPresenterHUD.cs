@@ -7,7 +7,6 @@ namespace Modules.UI.Screens.HUD_Public
 {
     public interface IUIPresenterHUD : IScreenPresenter
     {
-        void ShowHint(bool _show, HUDHintType _type = HUDHintType.Undefined);
     }
 
     public enum HUDHintType

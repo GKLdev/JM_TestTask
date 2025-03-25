@@ -9,6 +9,7 @@ namespace Modules.UI.UIController_Public
         {
             UNDEFINED = -1,
         	HUD = 0,
+	Upgrades = 1,
 
         }
 }

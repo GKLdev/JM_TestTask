@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Modules.CharacterManager_Public;
+using Modules.DamageManager_Public;
+using Modules.PlayerProgression_Public;
 using Modules.ReferenceDb_Public;
 using Modules.UI.Screens.HUD_Public;
 using Modules.UI.UIController_Public;
@@ -16,41 +19,55 @@ namespace Modules.UI.Screens.HUD
         
         [Inject] 
         private ReferenceDbAliasesConfig aliases;
+
+        [Inject]
+        private ICharacterManager characterMgr;
         
-        private ConfigHUD config;
-        
+        [Inject]
+        private IPlayerProgression playerProgression;
+
+        private CharacterFacade_Public.ICharacterFacade player;
+
         // *****************************
         // OnInitialised
         // *****************************
         protected override void OnInitialised()
         {
             base.OnInitialised();
-
-            //int id = aliases.CONFIG_HUD
-            //config = reference.GetEntry<ConfigHUD>((int)CATEGORY_SCREEN_CONFIGS.CONFIG_HUD);
         }
 
         // *****************************
-        // ShowHint
+        // OnInitialised
         // *****************************
-        public void ShowHint(bool _show, HUDHintType _type = HUDHintType.Undefined)
+        public override void Show()
         {
-            Sprite image = null;
-            string text  = default;
-            
-            switch (_type)
+            base.Show();
+
+            player = characterMgr.GetPlayer();
+            if (player != null)
             {
-                case HUDHintType.Undefined:
-                    break;
-                case HUDHintType.ItemPickup:
-                    image = config.IconPickupItem;
-                    text = "Pickup item";
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(_type), _type, null);
+                UpdateHPBar(player.P_Damageable.GetCurrentHealth(), player.P_Damageable.GetMaxHealth());
+                player.P_Damageable.OnDamageApplied += OnPlayerDamaged;
             }
-            
-            view.ToggleHint(_show, image, text);
+
+            playerProgression.OnUpgradePointsCountChanged += OnPlayerStatChanged;
+            OnPlayerStatChanged();
+        }
+
+        // *****************************
+        // Hide
+        // *****************************
+        public override void Hide()
+        {
+            base.Hide();
+
+            if (player != null)
+            {
+                player.P_Damageable.OnDamageApplied -= OnPlayerDamaged;
+            }
+
+            playerProgression.OnUpgradePointsCountChanged -= OnPlayerStatChanged;
+            player = null;
         }
 
         // *****************************
@@ -62,7 +79,39 @@ namespace Modules.UI.Screens.HUD
             
             reference = null;
             aliases   = null;
-            config    = null;
+        }
+
+        // *****************************
+        // OnPlayerDamaged
+        // *****************************
+        private void OnPlayerDamaged(bool _isDead, IDamageable _damagable)
+        {
+            UpdateHPBar(_damagable.GetCurrentHealth(), _damagable.GetMaxHealth());
+        }
+
+        // *****************************
+        // UpdateHPBar
+        // *****************************
+        private void UpdateHPBar(float _current, float _max)
+        {
+            view.UpdaterHPBar(Mathf.FloorToInt(_current), Mathf.FloorToInt(_max));
+        }
+
+        // *****************************
+        // OnPlayerStatChanged
+        // *****************************
+        private void OnPlayerStatChanged()
+        {
+            int sparePoints = playerProgression.GetAvailableUpgradePointsCount();
+            UpdateUpgradeSection(sparePoints);
+        }
+
+        // *****************************
+        // UpdateUpgradeSection
+        // *****************************
+        private void UpdateUpgradeSection(int _points)
+        {
+            view.SetUpgradesAvailable(_points);
         }
     }
 }

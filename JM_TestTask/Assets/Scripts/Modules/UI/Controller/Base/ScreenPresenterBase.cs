@@ -8,7 +8,7 @@ namespace Modules.UI.UIController_Public
     public class ScreenPresenterBase<TView> : IScreenPresenter
         where TView : IScreenView
     {
-        private   ScreenType screenType;
+        private   ScreenType screenType = ScreenType.UNDEFINED;
         protected bool       isInitialised => initialised;
         private   bool       initialised   = false;
 
@@ -23,7 +23,7 @@ namespace Modules.UI.UIController_Public
         /// Is called only when View is instantiated
         /// </summary>
         /// <param name="_view"></param>
-        void IScreenPresenter.Init(IScreenView _view)
+        void IScreenPresenter.Init(IScreenView _view, ScreenType _screenType)
         {
             view = (TView)_view;
             
@@ -31,7 +31,8 @@ namespace Modules.UI.UIController_Public
             {
                 return;
             }
-            
+
+            screenType = _screenType;
             OnInitialisation();
             initialised = true;
             OnInitialised();

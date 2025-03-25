@@ -1,26 +1,40 @@
 using System.Collections;
 using System.Collections.Generic;
+using GDTUtils;
 using GDTUtils.Extensions;
+using Modules.UI.Button_Public;
+using Modules.UI.Common;
 using Modules.UI.Screens.HUD_Public;
+using Modules.UI.Screens.Main.ProgressBar_Public;
 using Modules.UI.UIController;
 using Modules.UI.UIController_Public;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace Modules.UI.Screens.HUD
 {
     public class UIScreenHUDView : ScreenViewBase<IUIPresenterHUD>, IUIScreenViewHUD
     {
         [SerializeField]
-        private GameObject hintRoot;
+        private TextMeshProUGUI                     textHP;
+        [SerializeField]
+        private TextMeshProUGUI                     textUpgrades;
+        [SerializeField]
+        private SerializedInterface<IProgressBar>   progressBar;
+        [SerializeField]
+        private SerializedInterface<Button<ButtonResponseDataBase, ButtonInputDataBase>> buttonOpenOpgradeScreen;
 
         [SerializeField]
-        private TextMeshProUGUI hintText;
-
+        private RectTransform   pointsIndicatorRoot;
         [SerializeField]
-        private Image hintIcon;
-        
+        private TextMeshProUGUI pointsIndicatorText;
+
+        [Header("Text strings")]
+        [SerializeField]
+        private string localeHealthBar = "HP";
+
         // *****************************
         // Show
         // *****************************
@@ -28,7 +42,10 @@ namespace Modules.UI.Screens.HUD
         {
             base.Show();
             presenter.ReportScreenShown();
-            hintRoot.SetActive(false);
+            SetUpgradesAvailable(0);
+            UpdaterHPBar(-1, -1);
+
+            textUpgrades.text = $"Press [B] to levelup!";
         }
 
         // *****************************
@@ -41,31 +58,28 @@ namespace Modules.UI.Screens.HUD
         }
 
         // *****************************
-        // ToggleHint
+        // SetUpgradesAvailable
         // *****************************
-        public void ToggleHint(bool _show, Sprite _image = null, string _text = null)
+        public void SetUpgradesAvailable(int _count)
         {
-            hintRoot.SetActive(_show);
-            if (!_show)
-            {
-                return;
-            }
+            bool available = _count > 0;
+            textUpgrades.gameObject.SetActive(available);
+            pointsIndicatorRoot.gameObject.SetActive(available);
 
-            bool assignIcon = _image != null;
-            if (assignIcon)
+            if (available)
             {
-                hintIcon.sprite = _image;
+                pointsIndicatorText.text = _count.ToString();
             }
-            
-            hintIcon.gameObject.SetActive(assignIcon);
+        }
 
-            bool assignText = !_text.NullOrEmpty();
-            if (assignText)
-            {
-                hintText.text = _text;
-            }
-            
-            hintText.gameObject.SetActive(assignText);
+        // *****************************
+        // UpdaterHPBar
+        // *****************************
+        public void UpdaterHPBar(int _current, int _max)
+        {
+            // Can be optimzed be using StringBuilder or Span, but using simple approach for now
+            textHP.text = $"{localeHealthBar}: {_current}/{_max}";
+            progressBar.Value.SetData(_current, _max);
         }
     }
 }

@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stats:
   - alias: Health
-    minValue: 1
+    minValue: 0
     maxValue: 10
   - alias: Speed
-    minValue: 1
+    minValue: 0
     maxValue: 10
   - alias: Damage
-    minValue: 1
+    minValue: 0
     maxValue: 10

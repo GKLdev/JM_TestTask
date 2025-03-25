@@ -9,6 +9,9 @@ namespace Modules.UI.UIController_Public
     public abstract class ScreenViewBase<TPresenter> : LogicBase, IScreenView
         where TPresenter : IScreenPresenter 
     {
+        [SerializeField]
+        private Canvas root;
+
         protected bool       isInitialised => initialised;
         private   bool       initialised   = false;
 
@@ -52,6 +55,7 @@ namespace Modules.UI.UIController_Public
         public virtual void Show()
         {
             LibModuleExceptions.ExceptionIfNotInitialized(initialised);
+            root.enabled = true;
         }
 
         // *****************************
@@ -60,6 +64,7 @@ namespace Modules.UI.UIController_Public
         public virtual void Hide()
         {
             LibModuleExceptions.ExceptionIfNotInitialized(initialised);
+            root.enabled = false;
         }
 
         // *****************************

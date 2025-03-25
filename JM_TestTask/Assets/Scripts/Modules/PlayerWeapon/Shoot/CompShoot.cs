@@ -25,8 +25,6 @@ namespace Modules.PlayerWeapon
                 return;
             }
 
-            Debug.Log("Shot");
-
             // Start cooldown
             _state.dynamicData.timeMgr.ResetCooldown(_state.dynamicData.shotCooldown);
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GDTUtils.Extensions;
 using Modules.UI.UIController_Public;
 using UnityEngine;
+using static Modules.UI.UIController.State.DynamicData;
 
 namespace Modules.UI.UIController
 {
@@ -123,7 +124,7 @@ namespace Modules.UI.UIController
                 
                 _screenContainer.screenView = component as IScreenView;
                 _screenContainer.screenView.Init(_screenContainer.presenter);
-                _screenContainer.presenter.Init(_screenContainer.screenView);
+                _screenContainer.presenter.Init(_screenContainer.screenView, _screenContainer.screenType);
             }
         }
 
@@ -157,8 +158,6 @@ namespace Modules.UI.UIController
                 QueueHideScreen(screenContainer);
                 return;
             }
-
-            throw new System.Exception($"Failed to hide UI screen={_screenType} not found!");
         }
 
         // *****************************
@@ -185,7 +184,7 @@ namespace Modules.UI.UIController
             bool skip = _screenContainer.screenState == State.DynamicData.ScreenState.Hidden || _screenContainer.screenState == State.DynamicData.ScreenState.Transition;
             if (skip)
             {
-                Debug.LogWarning($"Trying to hide screen={_screenContainer.screenType} while in transition");
+                Debug.LogWarning($"Trying to hide screen={_screenContainer.screenType} while hidden or in transition");
                 return;
             }
             

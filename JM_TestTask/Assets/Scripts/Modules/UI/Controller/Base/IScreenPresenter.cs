@@ -7,7 +7,7 @@ namespace Modules.UI.UIController_Public
 {
     public interface IScreenPresenter : IDisposable
     {
-        void Init(IScreenView _view);
+        void Init(IScreenView _view, ScreenType _screenType);
         void Show();
         void Hide();
         

@@ -26,6 +26,9 @@ namespace Modules.CharacterController
             else
             {
                 CompMovement.UpdateMovement(_state);
+
+                // Reset input data
+                _state.dynamicData.movementData.inputDirection = Vector2.zero;
             }
 
             // Update rotation

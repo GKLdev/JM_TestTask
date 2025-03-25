@@ -17,6 +17,7 @@ namespace Modules.PlayerProgression
         private State state = new();
 
         public event Action<StatChangeData> OnPlayerStatChanged;
+        public event Action                 OnUpgradePointsCountChanged;
 
         // *****************************
         // InitModule
@@ -58,8 +59,12 @@ namespace Modules.PlayerProgression
         public void AddUpgradePoints(int _val)
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+
+            _val = Mathf.Abs(_val);
             state.dynamicData.totalUpgradePoints += _val;
             state.dynamicData.spareUpgradePoints += _val;
+
+            OnUpgradePointsCountChanged?.Invoke();
         }
 
         // *****************************
@@ -78,6 +83,7 @@ namespace Modules.PlayerProgression
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
             CompStatManagement.SpendUpgradePoints(state, _val, _alias, this);
+            OnUpgradePointsCountChanged?.Invoke();
         }
 
         // *****************************
@@ -87,6 +93,7 @@ namespace Modules.PlayerProgression
         {
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
             CompStatManagement.RefundUpgradePoints(state, _val , _alias , this);
+            OnUpgradePointsCountChanged?.Invoke();
         }
 
         // *****************************
@@ -97,6 +104,15 @@ namespace Modules.PlayerProgression
             LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
             state.dynamicData.totalUpgradePoints = 0;
             state.dynamicData.spareUpgradePoints = 0;
+        }
+
+        // *****************************
+        // GetStatLimits
+        // *****************************
+        public void GetStatLimits(string _alias, out int _min, out int _max)
+        {
+            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.isInitialized);
+            CompStatManagement.GetStatLimits(state, _alias, out _min, out _max);
         }
     }
 

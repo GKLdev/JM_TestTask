@@ -16,4 +16,10 @@ MonoBehaviour:
   - screenTypeName: HUD
     presenterInterfaceType: Modules.UI.Screens.HUD_Public.IUIPresenterHUD
     presenterType: Modules.UI.Screens.HUD.UIPresenterHUD
-    screenPrefab: {fileID: 1954436043238074127, guid: 76dec49af32c9c3449b65f0ad1664761, type: 3}
+    screenPrefab: {fileID: 1954436043238074127, guid: 76dec49af32c9c3449b65f0ad1664761,
+      type: 3}
+  - screenTypeName: Upgrades
+    presenterInterfaceType: Modules.UI.Screens.Upgrades_Public.IUIPresenterUpgrades
+    presenterType: Modules.UI.Screens.Upgrades.UIPresenterUpgrades
+    screenPrefab: {fileID: 3601989678975181682, guid: 1400f1b79982e8845aa5de2b9df1a754,
+      type: 3}

@@ -18,6 +18,11 @@ namespace Modules.PlayerProgression_Public
         int GetStatValue(string _alias);
 
         /// <summary>
+        /// Gets limits of a give stat.
+        /// </summary>
+        void GetStatLimits(string _alias, out int _min, out int _max);
+
+        /// <summary>
         /// Adds points which can be traded for upgrades.
         /// </summary>
         void AddUpgradePoints(int _val);
@@ -46,6 +51,11 @@ namespace Modules.PlayerProgression_Public
         /// Gets Called after any stat was changed
         /// </summary>
         event System.Action<StatChangeData> OnPlayerStatChanged;
+
+        /// <summary>
+        /// Gets Called after player receved or spent an upgrade point.
+        /// </summary>
+        event Action OnUpgradePointsCountChanged;
     }
 
     public struct StatChangeData
