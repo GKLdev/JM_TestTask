@@ -91,23 +91,6 @@ namespace Modules.CharacterController
         }
 
         // *****************************
-        // LookDirection
-        // *****************************
-        public void LookDirection(Vector3 _dir)
-        {
-            LibModuleExceptions.ExceptionIfNotInitialized(state.dynamicData.generalData.isInitialized);
-
-            bool atNavmeshMode = state.dynamicData.movementData.navigationMode == NavigationMode.Navmesh;
-            if (atNavmeshMode)
-            {
-                return;
-            }
-
-            state.dynamicData.rotationData.targetLookDirection = _dir.normalized;
-            state.dynamicData.rotationData.hasRelativeLookAngles = false;
-        }
-
-        // *****************************
         // LookDirectionRelative
         // *****************************
         public void LookDirectionRelative(Vector2 _angles)
@@ -121,7 +104,6 @@ namespace Modules.CharacterController
             }
 
             state.dynamicData.rotationData.relativeLookAngles = _angles;
-            state.dynamicData.rotationData.hasRelativeLookAngles = true;
         }
 
         // *****************************
@@ -317,7 +299,6 @@ namespace Modules.CharacterController
                 public IDynamicAxis rotationAxis;
                 public Vector3 targetLookDirection = Vector3.zero;
                 public Vector2 relativeLookAngles = Vector2.zero;
-                public bool hasRelativeLookAngles = false;
                 public float verticalLookAngle = 0f;
 
                 // Reset all rotation data
@@ -326,7 +307,6 @@ namespace Modules.CharacterController
                     rotationAxis?.ResetAxis();
                     targetLookDirection = Vector3.zero;
                     relativeLookAngles = Vector2.zero;
-                    hasRelativeLookAngles = false;
                     verticalLookAngle = 0f;
                 }
             }

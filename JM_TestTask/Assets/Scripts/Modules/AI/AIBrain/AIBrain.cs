@@ -1,15 +1,10 @@
 using GDTUtils;
 using Modules.AIBrain_Public;
-using Modules.AIManager;
 using Modules.AIManager_Public;
 using Modules.AISensors_Public;
 using Modules.AITemplate_Public;
 using Modules.CharacterFacade_Public;
-using Modules.CharacterManager;
-using Modules.CharacterManager_Public;
-using Modules.Controllable_Public;
 using Modules.ModuleManager_Public;
-using Modules.ReferenceDb_Public;
 using Modules.TimeManager_Public;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,8 +16,7 @@ namespace Modules.AIBrain
 {
     public class AIBrain : LogicBase, IAIBrain
     {
-        public SerializedInterface<IControllable>       controllable;
-        public ScriptableObject                         template;
+        public ScriptableObject template;
 
         [SerializeField]
         List<SensorContainer> sensors = new();

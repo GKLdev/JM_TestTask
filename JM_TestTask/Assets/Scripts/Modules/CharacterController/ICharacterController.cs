@@ -37,11 +37,6 @@ namespace Modules.CharacterController_Public
         void SetNavigationMode(NavigationMode _mode);
 
         /// <summary>
-        /// Sets the absolute look direction (world space vector) for the character to smoothly rotate towards.
-        /// </summary>
-        void LookDirection(Vector3 _dir);
-
-        /// <summary>
         /// Sets the relative look direction (Euler angles in degrees) for the character to rotate by.
         /// </summary>
         void LookDirectionRelative(Vector2 _angles);

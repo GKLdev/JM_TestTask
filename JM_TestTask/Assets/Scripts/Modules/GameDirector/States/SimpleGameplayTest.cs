@@ -30,6 +30,11 @@ namespace Modules.GameDirector
 
         ICharacterFacade player;
 
+        private float   aiSpawnOffset           = 10f;
+        private float   playerSpawnOffset       = 5f;
+        private int     aiCharactersCount       = 10;
+        private int     upgradePointsPerKill    = 1;
+
         // *****************************
         // OnStart
         // *****************************
@@ -46,13 +51,12 @@ namespace Modules.GameDirector
             input           = stateMachine.P_ExternalReference.dynamicData.container.Resolve<IInputManager>();
 
             // Spawn player
-            player          = SpawnPlayer(Vector3.zero, Vector3.forward);
+            player          = SpawnPlayer(Vector3.zero + -Vector3.right * playerSpawnOffset, Vector3.right);
 
             // Spawn ai characters
-            for (int i = 0; i < 10; i++) 
+            for (int i = 0; i < aiCharactersCount; i++) 
             {
-                int rng = GDTRandom.generalRng.Next(1, 10);
-                SpawnAI(new Vector3(0 + rng, 0f, 0f), Vector3.forward);
+                SpawnAIRandomized();
             }
 
             // Prepare game systems
@@ -107,11 +111,19 @@ namespace Modules.GameDirector
                 return;
             }
 
-            progression.AddUpgradePoints(1);
+            progression.AddUpgradePoints(upgradePointsPerKill);
             _damageable.OnDamageApplied -= OnAIDamaged;
 
-            int rng = GDTRandom.generalRng.Next(1, 10);
-            SpawnAI(new Vector3(0 + rng, 0f, 0f), Vector3.forward);
+            SpawnAIRandomized();
+        }
+
+        // *****************************
+        // SpawnAIRandomized
+        // *****************************
+        private void SpawnAIRandomized()
+        {
+            float rng = (float)GDTRandom.generalRng.NextDouble(0f, 1f);
+            SpawnAI(new Vector3(0 + aiSpawnOffset * rng, 0f, 0f), Vector3.forward);
         }
     }
 }
