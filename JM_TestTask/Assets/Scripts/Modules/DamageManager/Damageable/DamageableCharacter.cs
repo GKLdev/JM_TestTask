@@ -1,5 +1,6 @@
 using GDTUtils;
 using Modules.CharacterController_Public;
+using Modules.CharacterStatsSystem_Public;
 using Modules.DamageManager_Public;
 using Modules.ModuleManager_Public;
 using Modules.TimeManager_Public;

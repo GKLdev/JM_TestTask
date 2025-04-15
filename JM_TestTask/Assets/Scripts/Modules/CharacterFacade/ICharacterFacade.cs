@@ -4,6 +4,7 @@ using GDTUtils.Patterns.Factory;
 using Modules.AITemplate_Public;
 using Modules.CharacterController_Public;
 using Modules.CharacterControllerView_Public;
+using Modules.CharacterStatsSystem_Public;
 using Modules.DamageManager_Public;
 using Modules.ReferenceDb_Public;
 using System.Collections;

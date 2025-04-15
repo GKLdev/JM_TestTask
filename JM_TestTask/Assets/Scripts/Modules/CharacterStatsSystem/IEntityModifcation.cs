@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Modules.CharacterController_Public
+namespace Modules.CharacterStatsSystem_Public
 {
     public interface IEntityModifcation
     {
